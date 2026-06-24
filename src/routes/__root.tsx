@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Libélula Teatro — Companhia de teatro · Marinha Grande" },
+      { title: "Libélula Teatro" },
       {
         name: "description",
         content:
@@ -91,6 +91,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Libélula Teatro" },
+      { name: "description", content: "Libélula Teatro Site: A professional, responsive website for a Portuguese theater company." },
+      { property: "og:description", content: "Libélula Teatro Site: A professional, responsive website for a Portuguese theater company." },
+      { name: "twitter:description", content: "Libélula Teatro Site: A professional, responsive website for a Portuguese theater company." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5cf3b170-cb55-4035-87f5-b885f4aab533/id-preview-061115fa--72e57df7-eca0-4ef1-8b66-47bc2a0078f6.lovable.app-1782334124636.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5cf3b170-cb55-4035-87f5-b885f4aab533/id-preview-061115fa--72e57df7-eca0-4ef1-8b66-47bc2a0078f6.lovable.app-1782334124636.png" },
     ],
     links: [
       {
