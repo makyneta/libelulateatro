@@ -77,21 +77,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Libélula Teatro — Companhia de teatro · Marinha Grande" },
+      {
+        name: "description",
+        content:
+          "Libélula Teatro é uma companhia portuguesa sediada na Marinha Grande. Espectáculos, peças em digressão e bilhetes.",
+      },
+      { name: "author", content: "Libélula Teatro" },
+      { property: "og:title", content: "Libélula Teatro" },
+      {
+        property: "og:description",
+        content: "Companhia de teatro · Marinha Grande, Portugal.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
+    htmlAttrs: { lang: "pt-PT" },
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -101,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-PT">
       <head>
         <HeadContent />
       </head>
