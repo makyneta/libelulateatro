@@ -14,7 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      apresentacoes: {
+        Row: {
+          created_at: string
+          data: string
+          forcar_sold_out: boolean
+          hora: string | null
+          id: string
+          link_bilhetes: string | null
+          local: string | null
+          peca_id: string
+        }
+        Insert: {
+          created_at?: string
+          data: string
+          forcar_sold_out?: boolean
+          hora?: string | null
+          id?: string
+          link_bilhetes?: string | null
+          local?: string | null
+          peca_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          forcar_sold_out?: boolean
+          hora?: string | null
+          id?: string
+          link_bilhetes?: string | null
+          local?: string | null
+          peca_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apresentacoes_peca_id_fkey"
+            columns: ["peca_id"]
+            isOneToOne: false
+            referencedRelation: "pecas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pecas: {
+        Row: {
+          ano: string | null
+          created_at: string
+          descricao_breve: string | null
+          descricao_completa: string | null
+          ficha_tecnica: string | null
+          id: string
+          imagem_url: string | null
+          nome: string
+          ordem: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          ano?: string | null
+          created_at?: string
+          descricao_breve?: string | null
+          descricao_completa?: string | null
+          ficha_tecnica?: string | null
+          id?: string
+          imagem_url?: string | null
+          nome: string
+          ordem?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          ano?: string | null
+          created_at?: string
+          descricao_breve?: string | null
+          descricao_completa?: string | null
+          ficha_tecnica?: string | null
+          id?: string
+          imagem_url?: string | null
+          nome?: string
+          ordem?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          admin_password_hash: string | null
+          admin_password_salt: string | null
+          id: number
+          logo_dark_url: string | null
+          logo_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_password_hash?: string | null
+          admin_password_salt?: string | null
+          id?: number
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_password_hash?: string | null
+          admin_password_salt?: string | null
+          id?: number
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
