@@ -9,38 +9,164 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PecasRouteImport } from './routes/pecas'
+import { Route as ContactosRouteImport } from './routes/contactos'
+import { Route as BilhetesRouteImport } from './routes/bilhetes'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PecasIndexRouteImport } from './routes/pecas.index'
+import { Route as PecasSlugRouteImport } from './routes/pecas.$slug'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PecasRoute = PecasRouteImport.update({
+  id: '/pecas',
+  path: '/pecas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactosRoute = ContactosRouteImport.update({
+  id: '/contactos',
+  path: '/contactos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BilhetesRoute = BilhetesRouteImport.update({
+  id: '/bilhetes',
+  path: '/bilhetes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PecasIndexRoute = PecasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PecasRoute,
+} as any)
+const PecasSlugRoute = PecasSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PecasRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/bilhetes': typeof BilhetesRoute
+  '/contactos': typeof ContactosRoute
+  '/pecas': typeof PecasRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/pecas/$slug': typeof PecasSlugRoute
+  '/pecas/': typeof PecasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/bilhetes': typeof BilhetesRoute
+  '/contactos': typeof ContactosRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/pecas/$slug': typeof PecasSlugRoute
+  '/pecas': typeof PecasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/bilhetes': typeof BilhetesRoute
+  '/contactos': typeof ContactosRoute
+  '/pecas': typeof PecasRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/pecas/$slug': typeof PecasSlugRoute
+  '/pecas/': typeof PecasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/bilhetes'
+    | '/contactos'
+    | '/pecas'
+    | '/sitemap.xml'
+    | '/pecas/$slug'
+    | '/pecas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/bilhetes'
+    | '/contactos'
+    | '/sitemap.xml'
+    | '/pecas/$slug'
+    | '/pecas'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/bilhetes'
+    | '/contactos'
+    | '/pecas'
+    | '/sitemap.xml'
+    | '/pecas/$slug'
+    | '/pecas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  BilhetesRoute: typeof BilhetesRoute
+  ContactosRoute: typeof ContactosRoute
+  PecasRoute: typeof PecasRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pecas': {
+      id: '/pecas'
+      path: '/pecas'
+      fullPath: '/pecas'
+      preLoaderRoute: typeof PecasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contactos': {
+      id: '/contactos'
+      path: '/contactos'
+      fullPath: '/contactos'
+      preLoaderRoute: typeof ContactosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bilhetes': {
+      id: '/bilhetes'
+      path: '/bilhetes'
+      fullPath: '/bilhetes'
+      preLoaderRoute: typeof BilhetesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +174,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pecas/': {
+      id: '/pecas/'
+      path: '/'
+      fullPath: '/pecas/'
+      preLoaderRoute: typeof PecasIndexRouteImport
+      parentRoute: typeof PecasRoute
+    }
+    '/pecas/$slug': {
+      id: '/pecas/$slug'
+      path: '/$slug'
+      fullPath: '/pecas/$slug'
+      preLoaderRoute: typeof PecasSlugRouteImport
+      parentRoute: typeof PecasRoute
+    }
   }
 }
 
+interface PecasRouteChildren {
+  PecasSlugRoute: typeof PecasSlugRoute
+  PecasIndexRoute: typeof PecasIndexRoute
+}
+
+const PecasRouteChildren: PecasRouteChildren = {
+  PecasSlugRoute: PecasSlugRoute,
+  PecasIndexRoute: PecasIndexRoute,
+}
+
+const PecasRouteWithChildren = PecasRoute._addFileChildren(PecasRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  BilhetesRoute: BilhetesRoute,
+  ContactosRoute: ContactosRoute,
+  PecasRoute: PecasRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
