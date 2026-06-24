@@ -8,10 +8,13 @@ import { PosterPlaceholder } from "./index";
 import { getPecaBySlug } from "@/lib/public-data.functions";
 
 export const Route = createFileRoute("/pecas/$slug")({
-  head: ({ loaderData }) => {
-    const nome = loaderData?.peca?.nome ?? "Peça";
-    const desc = loaderData?.peca?.descricao_breve ?? "Peça da companhia Libélula Teatro.";
-    const img = loaderData?.peca?.imagem_url ?? undefined;
+  head: (ctx) => {
+    const ld = ctx.loaderData as
+      | { peca?: { nome?: string; descricao_breve?: string | null; imagem_url?: string | null } }
+      | undefined;
+    const nome = ld?.peca?.nome ?? "Peça";
+    const desc = ld?.peca?.descricao_breve ?? "Peça da companhia Libélula Teatro.";
+    const img = ld?.peca?.imagem_url ?? undefined;
     return {
       meta: [
         { title: `${nome} — Libélula Teatro` },

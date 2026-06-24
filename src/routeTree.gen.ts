@@ -9,38 +9,119 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PecasRouteImport } from './routes/pecas'
+import { Route as ContactosRouteImport } from './routes/contactos'
+import { Route as BilhetesRouteImport } from './routes/bilhetes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PecasIndexRouteImport } from './routes/pecas.index'
+import { Route as PecasSlugRouteImport } from './routes/pecas.$slug'
 
+const PecasRoute = PecasRouteImport.update({
+  id: '/pecas',
+  path: '/pecas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactosRoute = ContactosRouteImport.update({
+  id: '/contactos',
+  path: '/contactos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BilhetesRoute = BilhetesRouteImport.update({
+  id: '/bilhetes',
+  path: '/bilhetes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PecasIndexRoute = PecasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PecasRoute,
+} as any)
+const PecasSlugRoute = PecasSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PecasRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bilhetes': typeof BilhetesRoute
+  '/contactos': typeof ContactosRoute
+  '/pecas': typeof PecasRouteWithChildren
+  '/pecas/$slug': typeof PecasSlugRoute
+  '/pecas/': typeof PecasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bilhetes': typeof BilhetesRoute
+  '/contactos': typeof ContactosRoute
+  '/pecas/$slug': typeof PecasSlugRoute
+  '/pecas': typeof PecasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bilhetes': typeof BilhetesRoute
+  '/contactos': typeof ContactosRoute
+  '/pecas': typeof PecasRouteWithChildren
+  '/pecas/$slug': typeof PecasSlugRoute
+  '/pecas/': typeof PecasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bilhetes'
+    | '/contactos'
+    | '/pecas'
+    | '/pecas/$slug'
+    | '/pecas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/bilhetes' | '/contactos' | '/pecas/$slug' | '/pecas'
+  id:
+    | '__root__'
+    | '/'
+    | '/bilhetes'
+    | '/contactos'
+    | '/pecas'
+    | '/pecas/$slug'
+    | '/pecas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BilhetesRoute: typeof BilhetesRoute
+  ContactosRoute: typeof ContactosRoute
+  PecasRoute: typeof PecasRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pecas': {
+      id: '/pecas'
+      path: '/pecas'
+      fullPath: '/pecas'
+      preLoaderRoute: typeof PecasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contactos': {
+      id: '/contactos'
+      path: '/contactos'
+      fullPath: '/contactos'
+      preLoaderRoute: typeof ContactosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bilhetes': {
+      id: '/bilhetes'
+      path: '/bilhetes'
+      fullPath: '/bilhetes'
+      preLoaderRoute: typeof BilhetesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +129,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pecas/': {
+      id: '/pecas/'
+      path: '/'
+      fullPath: '/pecas/'
+      preLoaderRoute: typeof PecasIndexRouteImport
+      parentRoute: typeof PecasRoute
+    }
+    '/pecas/$slug': {
+      id: '/pecas/$slug'
+      path: '/$slug'
+      fullPath: '/pecas/$slug'
+      preLoaderRoute: typeof PecasSlugRouteImport
+      parentRoute: typeof PecasRoute
+    }
   }
 }
 
+interface PecasRouteChildren {
+  PecasSlugRoute: typeof PecasSlugRoute
+  PecasIndexRoute: typeof PecasIndexRoute
+}
+
+const PecasRouteChildren: PecasRouteChildren = {
+  PecasSlugRoute: PecasSlugRoute,
+  PecasIndexRoute: PecasIndexRoute,
+}
+
+const PecasRouteWithChildren = PecasRoute._addFileChildren(PecasRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BilhetesRoute: BilhetesRoute,
+  ContactosRoute: ContactosRoute,
+  PecasRoute: PecasRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

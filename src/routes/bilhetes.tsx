@@ -32,7 +32,8 @@ function BilhetesPage() {
   const fetcher = useServerFn(listAllApresentacoes);
   const { data } = useQuery({ queryKey: ["all-apres"], queryFn: () => fetcher() });
   const pecasMap = useMemo(() => {
-    const m: Record<string, (typeof data.pecas)[number]> = {};
+    type P = NonNullable<typeof data>["pecas"][number];
+    const m: Record<string, P> = {};
     for (const p of data?.pecas ?? []) m[p.id] = p;
     return m;
   }, [data]);
