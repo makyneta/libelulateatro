@@ -111,7 +111,11 @@ export const updateLogos = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     await requireUnlocked();
     const sb = await adminClient();
-    const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    const patch: {
+      logo_url?: string | null;
+      logo_dark_url?: string | null;
+      updated_at: string;
+    } = { updated_at: new Date().toISOString() };
     if (data.logo_url !== undefined) patch.logo_url = data.logo_url;
     if (data.logo_dark_url !== undefined) patch.logo_dark_url = data.logo_dark_url;
     const { error } = await sb.from("site_settings").update(patch).eq("id", 1);
