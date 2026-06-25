@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
-import { LogOut, Plus, Pencil, Trash2, X } from "lucide-react";
+import { LogOut, Plus, Pencil, Trash2, X, Upload, ArrowUp, ArrowDown } from "lucide-react";
 import { LibelulaLogo } from "@/components/libelula-logo";
 import {
   getAdminStatus,
@@ -17,6 +17,8 @@ import {
   deleteApresentacao,
   updateLogos,
   getAdminSettings,
+  updateContent,
+  uploadImage,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin")({
@@ -133,7 +135,7 @@ function LoginView({ onDone }: { onDone: () => void }) {
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const logout = useServerFn(adminLogout);
-  const [tab, setTab] = useState<"pecas" | "apres" | "ident">("pecas");
+  const [tab, setTab] = useState<"pecas" | "apres" | "conteudo" | "ident">("pecas");
   return (
     <div className="min-h-dvh bg-secondary/30">
       <header className="border-b border-border bg-background">
@@ -153,6 +155,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           {[
             { id: "pecas", label: "Peças" },
             { id: "apres", label: "Apresentações" },
+            { id: "conteudo", label: "Conteúdo" },
             { id: "ident", label: "Identidade visual" },
           ].map((t) => (
             <button
@@ -172,6 +175,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
       <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
         {tab === "pecas" && <PecasAdmin />}
         {tab === "apres" && <ApresAdmin />}
+        {tab === "conteudo" && <ContentAdmin />}
         {tab === "ident" && <IdentAdmin />}
       </main>
     </div>
