@@ -329,7 +329,12 @@ function PecaEditor({
             type="number"
           />
         </div>
-        <AdminField label="URL da imagem / cartaz" value={imagem ?? ""} onChange={setImagem} type="url" />
+        <ImageField
+          label="Imagem / cartaz"
+          value={imagem ?? ""}
+          onChange={setImagem}
+          folder="pecas"
+        />
         <AdminField label="Descrição breve" value={breve ?? ""} onChange={setBreve} multiline rows={3} />
         <AdminField label="Descrição completa" value={completa ?? ""} onChange={setCompleta} multiline rows={6} />
         <AdminField label="Ficha técnica (opcional)" value={ficha ?? ""} onChange={setFicha} multiline rows={4} />
@@ -525,9 +530,8 @@ function IdentAdmin() {
     <div className="max-w-2xl">
       <h2 className="font-display text-2xl">Identidade visual</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        Indique o URL do logótipo oficial da companhia. Será usado no cabeçalho, rodapé
-        e ecrã de administração. Para utilizar uma imagem própria, carregue-a num serviço
-        de imagem (ex: imgbb, Cloudinary) e cole aqui o URL público.
+        Logótipo oficial da companhia, usado no cabeçalho, rodapé e ecrã de administração.
+        Pode carregar uma imagem diretamente ou colar um URL.
       </p>
       <form
         onSubmit={async (e) => {
@@ -539,10 +543,270 @@ function IdentAdmin() {
         }}
         className="mt-6 space-y-4"
       >
-        <AdminField label="URL do logótipo principal" type="url" value={logo} onChange={setLogo} />
-        <AdminField label="URL do logótipo alternativo (para fundos escuros, opcional)" type="url" value={logoDark} onChange={setLogoDark} />
+        <ImageField label="Logótipo principal" value={logo} onChange={setLogo} folder="logos" />
+        <ImageField
+          label="Logótipo alternativo (para fundos escuros, opcional)"
+          value={logoDark}
+          onChange={setLogoDark}
+          folder="logos"
+        />
         <div className="flex justify-end"><button type="submit" className={btnPrimary}>Guardar</button></div>
       </form>
+    </div>
+  );
+}
+
+// ---- Conteúdo (hero + sobre) ----
+function ContentAdmin() {
+  const get = useServerFn(getAdminSettings);
+  const upd = useServerFn(updateContent);
+  const qc = useQueryClient();
+  const { data, isLoading } = useQuery({ queryKey: ["admin-settings"], queryFn: () => get() });
+  const [heroTitle, setHeroTitle] = useState("");
+  const [heroSubtitle, setHeroSubtitle] = useState("");
+  const [sobreTitulo, setSobreTitulo] = useState("");
+  const [sobreTexto, setSobreTexto] = useState("");
+  const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  if (data && !loaded) {
+    setLoaded(true);
+    setHeroTitle(data.hero_title ?? "");
+    setHeroSubtitle(data.hero_subtitle ?? "");
+    setSobreTitulo(data.sobre_titulo ?? "");
+    setSobreTexto(data.sobre_texto ?? "");
+    setHeroImages(Array.isArray(data.hero_images) ? (data.hero_images as string[]) : []);
+  }
+
+  function move(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= heroImages.length) return;
+    const next = heroImages.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    setHeroImages(next);
+  }
+  function remove(i: number) {
+    setHeroImages(heroImages.filter((_, idx) => idx !== i));
+  }
+
+  if (isLoading) return <p className="text-muted-foreground">A carregar…</p>;
+
+  return (
+    <div className="max-w-2xl">
+      <h2 className="font-display text-2xl">Conteúdo da homepage</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Edite o texto da secção principal (hero) e a apresentação "Sobre".
+        As imagens do hero passam automaticamente em diaporama.
+      </p>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await upd({
+            data: {
+              hero_title: heroTitle || null,
+              hero_subtitle: heroSubtitle || null,
+              sobre_titulo: sobreTitulo || null,
+              sobre_texto: sobreTexto || null,
+              hero_images: heroImages,
+            },
+          });
+          qc.invalidateQueries({ queryKey: ["admin-settings"] });
+          qc.invalidateQueries({ queryKey: ["site-settings"] });
+          qc.invalidateQueries({ queryKey: ["homepage"] });
+          alert("Conteúdo atualizado.");
+        }}
+        className="mt-6 space-y-6"
+      >
+        <fieldset className="space-y-4 rounded-lg border border-border bg-background p-5">
+          <legend className="px-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Hero
+          </legend>
+          <AdminField label="Título" value={heroTitle} onChange={setHeroTitle} />
+          <AdminField
+            label="Subtítulo / descrição curta"
+            value={heroSubtitle}
+            onChange={setHeroSubtitle}
+            multiline
+            rows={3}
+          />
+
+          <div>
+            <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Imagens em diaporama
+            </span>
+            {heroImages.length === 0 && (
+              <p className="mb-3 rounded-md border border-dashed border-border bg-secondary/30 px-4 py-6 text-center text-xs text-muted-foreground">
+                Sem imagens. Carregue uma para começar.
+              </p>
+            )}
+            <ul className="space-y-2">
+              {heroImages.map((url, i) => (
+                <li
+                  key={url + i}
+                  className="flex items-center gap-3 rounded-md border border-border bg-card p-2"
+                >
+                  <img src={url} alt="" className="h-14 w-20 rounded object-cover" />
+                  <span className="flex-1 truncate text-xs text-muted-foreground">{url}</span>
+                  <button
+                    type="button"
+                    onClick={() => move(i, -1)}
+                    disabled={i === 0}
+                    className="rounded p-1 text-muted-foreground hover:bg-muted disabled:opacity-30"
+                    aria-label="Mover para cima"
+                  >
+                    <ArrowUp className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(i, 1)}
+                    disabled={i === heroImages.length - 1}
+                    className="rounded p-1 text-muted-foreground hover:bg-muted disabled:opacity-30"
+                    aria-label="Mover para baixo"
+                  >
+                    <ArrowDown className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => remove(i)}
+                    className="rounded p-1 text-destructive hover:bg-destructive/10"
+                    aria-label="Remover"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3">
+              <UploadButton
+                folder="hero"
+                label="Adicionar imagem"
+                onUploaded={(url) => setHeroImages((cur) => [...cur, url])}
+              />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset className="space-y-4 rounded-lg border border-border bg-background p-5">
+          <legend className="px-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Sobre
+          </legend>
+          <AdminField label="Título" value={sobreTitulo} onChange={setSobreTitulo} />
+          <AdminField
+            label="Texto"
+            value={sobreTexto}
+            onChange={setSobreTexto}
+            multiline
+            rows={6}
+          />
+        </fieldset>
+
+        <div className="flex justify-end"><button type="submit" className={btnPrimary}>Guardar</button></div>
+      </form>
+    </div>
+  );
+}
+
+// ---- Upload primitives ----
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result));
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+function UploadButton({
+  folder,
+  label = "Carregar imagem",
+  onUploaded,
+}: {
+  folder: string;
+  label?: string;
+  onUploaded: (url: string) => void;
+}) {
+  const up = useServerFn(uploadImage);
+  const [busy, setBusy] = useState(false);
+  return (
+    <label className={`${btnSecondary} cursor-pointer ${busy ? "opacity-60" : ""}`}>
+      <Upload className="mr-2 h-4 w-4" />
+      {busy ? "A carregar…" : label}
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        disabled={busy}
+        onChange={async (e) => {
+          const file = e.currentTarget.files?.[0];
+          e.currentTarget.value = "";
+          if (!file) return;
+          if (file.size > 8 * 1024 * 1024) {
+            alert("Imagem demasiado grande (máx 8MB).");
+            return;
+          }
+          setBusy(true);
+          try {
+            const dataUrl = await fileToDataUrl(file);
+            const r = await up({ data: { filename: file.name, dataUrl, folder } });
+            if (!r.ok) alert(r.error ?? "Erro a carregar.");
+            else onUploaded(r.url);
+          } catch (err) {
+            alert((err as Error).message);
+          } finally {
+            setBusy(false);
+          }
+        }}
+      />
+    </label>
+  );
+}
+
+function ImageField({
+  label,
+  value,
+  onChange,
+  folder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  folder: string;
+}) {
+  return (
+    <div>
+      <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        {label}
+      </span>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        {value && (
+          <img
+            src={value}
+            alt=""
+            className="h-20 w-28 shrink-0 rounded-md border border-border object-cover"
+          />
+        )}
+        <div className="flex-1 space-y-2">
+          <input
+            type="url"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="URL da imagem ou carregue um ficheiro"
+            className={inputCls}
+          />
+          <div className="flex flex-wrap gap-2">
+            <UploadButton folder={folder} onUploaded={onChange} />
+            {value && (
+              <button
+                type="button"
+                onClick={() => onChange("")}
+                className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
+              >
+                Remover
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
