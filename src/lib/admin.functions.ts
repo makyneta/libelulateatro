@@ -146,10 +146,18 @@ export const updateContent = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     await requireUnlocked();
     const sb = await adminClient();
-    const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
-    for (const k of ["hero_title", "hero_subtitle", "sobre_titulo", "sobre_texto"] as const) {
-      if (data[k] !== undefined) patch[k] = data[k];
-    }
+    const patch: {
+      hero_title?: string | null;
+      hero_subtitle?: string | null;
+      sobre_titulo?: string | null;
+      sobre_texto?: string | null;
+      hero_images?: string[];
+      updated_at: string;
+    } = { updated_at: new Date().toISOString() };
+    if (data.hero_title !== undefined) patch.hero_title = data.hero_title;
+    if (data.hero_subtitle !== undefined) patch.hero_subtitle = data.hero_subtitle;
+    if (data.sobre_titulo !== undefined) patch.sobre_titulo = data.sobre_titulo;
+    if (data.sobre_texto !== undefined) patch.sobre_texto = data.sobre_texto;
     if (data.hero_images !== undefined) patch.hero_images = data.hero_images;
     const { error } = await sb.from("site_settings").update(patch).eq("id", 1);
     if (error) throw new Error(error.message);
