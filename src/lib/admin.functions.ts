@@ -123,6 +123,96 @@ export const updateLogos = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+// --- Content settings (hero + sobre + hero images) ---
+
+export const updateContent = createServerFn({ method: "POST" })
+  .inputValidator((d: {
+    hero_title?: string | null;
+    hero_subtitle?: string | null;
+    sobre_titulo?: string | null;
+    sobre_texto?: string | null;
+    hero_images?: string[];
+  }) =>
+    z
+      .object({
+        hero_title: z.string().max(200).nullable().optional(),
+        hero_subtitle: z.string().max(1000).nullable().optional(),
+        sobre_titulo: z.string().max(200).nullable().optional(),
+        sobre_texto: z.string().max(3000).nullable().optional(),
+        hero_images: z.array(z.string().url()).max(20).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    await requireUnlocked();
+    const sb = await adminClient();
+    const patch: {
+      hero_title?: string | null;
+      hero_subtitle?: string | null;
+      sobre_titulo?: string | null;
+      sobre_texto?: string | null;
+      hero_images?: string[];
+      updated_at: string;
+    } = { updated_at: new Date().toISOString() };
+    if (data.hero_title !== undefined) patch.hero_title = data.hero_title;
+    if (data.hero_subtitle !== undefined) patch.hero_subtitle = data.hero_subtitle;
+    if (data.sobre_titulo !== undefined) patch.sobre_titulo = data.sobre_titulo;
+    if (data.sobre_texto !== undefined) patch.sobre_texto = data.sobre_texto;
+    if (data.hero_images !== undefined) patch.hero_images = data.hero_images;
+    const { error } = await sb.from("site_settings").update(patch).eq("id", 1);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
+// --- Image upload (admin only) ---
+// Accepts base64 data URL, uploads to the private `media` bucket
+// and returns a long-lived signed URL.
+
+const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10; // 10 years
+
+export const uploadImage = createServerFn({ method: "POST" })
+  .inputValidator((d: { filename: string; dataUrl: string; folder?: string }) =>
+    z
+      .object({
+        filename: z.string().min(1).max(200),
+        dataUrl: z.string().min(10),
+        folder: z.string().regex(/^[a-z0-9_-]+$/).max(40).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    await requireUnlocked();
+    const match = data.dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+    if (!match) return { ok: false as const, error: "Formato de imagem inválido." };
+    const contentType = match[1];
+    if (!contentType.startsWith("image/")) {
+      return { ok: false as const, error: "Apenas imagens são permitidas." };
+    }
+    const buffer = Buffer.from(match[2], "base64");
+    if (buffer.byteLength > 8 * 1024 * 1024) {
+      return { ok: false as const, error: "Imagem demasiado grande (máx 8MB)." };
+    }
+    const ext = (contentType.split("/")[1] || "bin").replace(/[^a-z0-9]/gi, "").slice(0, 5);
+    const safeBase = data.filename
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9._-]+/g, "-")
+      .replace(/\.[a-z0-9]+$/i, "")
+      .slice(0, 60) || "imagem";
+    const path = `${data.folder ?? "geral"}/${Date.now()}-${randomBytes(4).toString("hex")}-${safeBase}.${ext}`;
+    const sb = await adminClient();
+    const { error: upErr } = await sb.storage
+      .from("media")
+      .upload(path, buffer, { contentType, upsert: false });
+    if (upErr) return { ok: false as const, error: upErr.message };
+    const { data: signed, error: sErr } = await sb.storage
+      .from("media")
+      .createSignedUrl(path, SIGNED_URL_TTL);
+    if (sErr || !signed) return { ok: false as const, error: sErr?.message ?? "Erro a gerar URL." };
+    return { ok: true as const, url: signed.signedUrl, path };
+  });
+
 // --- Peças CRUD ---
 
 const pecaSchema = z.object({
@@ -260,8 +350,18 @@ export const getAdminSettings = createServerFn({ method: "GET" }).handler(async 
   const sb = await adminClient();
   const { data } = await sb
     .from("site_settings")
-    .select("logo_url,logo_dark_url")
+    .select("logo_url,logo_dark_url,hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images")
     .eq("id", 1)
     .maybeSingle();
-  return data ?? { logo_url: null, logo_dark_url: null };
+  return (
+    data ?? {
+      logo_url: null,
+      logo_dark_url: null,
+      hero_title: null,
+      hero_subtitle: null,
+      sobre_titulo: null,
+      sobre_texto: null,
+      hero_images: [] as string[],
+    }
+  );
 });

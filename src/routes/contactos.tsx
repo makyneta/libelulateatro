@@ -10,10 +10,10 @@ export const Route = createFileRoute("/contactos")({
       { title: "Contactos — Libélula Teatro" },
       {
         name: "description",
-        content: "Fale com a Libélula Teatro — Marinha Grande, Portugal.",
+        content: "Fale com a Libélula Teatro — Leiria, Portugal.",
       },
       { property: "og:title", content: "Contactos — Libélula Teatro" },
-      { property: "og:description", content: "Marinha Grande, Portugal." },
+      { property: "og:description", content: "Leiria, Portugal." },
     ],
   }),
   component: ContactosPage,
@@ -118,7 +118,7 @@ function ContactosPage() {
               </li>
               <li className="flex items-start gap-3 text-muted-foreground">
                 <MapPin className="mt-0.5 h-5 w-5" />
-                <span>Marinha Grande<br />Portugal</span>
+                <span>Leiria<br />Portugal</span>
               </li>
             </ul>
           </aside>

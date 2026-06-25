@@ -101,25 +101,40 @@ export type Database = {
         Row: {
           admin_password_hash: string | null
           admin_password_salt: string | null
+          hero_images: Json
+          hero_subtitle: string | null
+          hero_title: string | null
           id: number
           logo_dark_url: string | null
           logo_url: string | null
+          sobre_texto: string | null
+          sobre_titulo: string | null
           updated_at: string
         }
         Insert: {
           admin_password_hash?: string | null
           admin_password_salt?: string | null
+          hero_images?: Json
+          hero_subtitle?: string | null
+          hero_title?: string | null
           id?: number
           logo_dark_url?: string | null
           logo_url?: string | null
+          sobre_texto?: string | null
+          sobre_titulo?: string | null
           updated_at?: string
         }
         Update: {
           admin_password_hash?: string | null
           admin_password_salt?: string | null
+          hero_images?: Json
+          hero_subtitle?: string | null
+          hero_title?: string | null
           id?: number
           logo_dark_url?: string | null
           logo_url?: string | null
+          sobre_texto?: string | null
+          sobre_titulo?: string | null
           updated_at?: string
         }
         Relationships: []

@@ -33,6 +33,11 @@ export type Apresentacao = {
 export type SiteSettings = {
   logo_url: string | null;
   logo_dark_url: string | null;
+  hero_title: string | null;
+  hero_subtitle: string | null;
+  sobre_titulo: string | null;
+  sobre_texto: string | null;
+  hero_images: string[];
 };
 
 const PECAS_COLS =
@@ -44,10 +49,18 @@ export const getSiteSettings = createServerFn({ method: "GET" }).handler(
     const sb = publicClient();
     const { data } = await sb
       .from("site_settings")
-      .select("logo_url,logo_dark_url")
+      .select("logo_url,logo_dark_url,hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images")
       .eq("id", 1)
       .maybeSingle();
-    return { logo_url: data?.logo_url ?? null, logo_dark_url: data?.logo_dark_url ?? null };
+    return {
+      logo_url: data?.logo_url ?? null,
+      logo_dark_url: data?.logo_dark_url ?? null,
+      hero_title: data?.hero_title ?? null,
+      hero_subtitle: data?.hero_subtitle ?? null,
+      sobre_titulo: data?.sobre_titulo ?? null,
+      sobre_texto: data?.sobre_texto ?? null,
+      hero_images: Array.isArray(data?.hero_images) ? (data!.hero_images as string[]) : [],
+    };
   },
 );
 
@@ -97,7 +110,7 @@ export const listAllApresentacoes = createServerFn({ method: "GET" }).handler(
 export const listHomepageData = createServerFn({ method: "GET" }).handler(async () => {
   const sb = publicClient();
   const today = new Date().toISOString().slice(0, 10);
-  const [{ data: proximas }, { data: pecas }] = await Promise.all([
+  const [{ data: proximas }, { data: pecas }, { data: settings }] = await Promise.all([
     sb
       .from("apresentacoes")
       .select(APRES_COLS)
@@ -109,6 +122,11 @@ export const listHomepageData = createServerFn({ method: "GET" }).handler(async 
       .select(PECAS_COLS)
       .order("ordem", { ascending: false })
       .limit(2),
+    sb
+      .from("site_settings")
+      .select("hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images")
+      .eq("id", 1)
+      .maybeSingle(),
   ]);
   // also get peca info for the upcoming apresentações
   const pecaIds = Array.from(new Set((proximas ?? []).map((a) => a.peca_id)));
@@ -121,5 +139,12 @@ export const listHomepageData = createServerFn({ method: "GET" }).handler(async 
     proximas: (proximas ?? []) as Apresentacao[],
     pecasMap,
     ultimasPecas: (pecas ?? []) as Peca[],
+    settings: {
+      hero_title: settings?.hero_title ?? null,
+      hero_subtitle: settings?.hero_subtitle ?? null,
+      sobre_titulo: settings?.sobre_titulo ?? null,
+      sobre_texto: settings?.sobre_texto ?? null,
+      hero_images: Array.isArray(settings?.hero_images) ? (settings!.hero_images as string[]) : [],
+    },
   };
 });
