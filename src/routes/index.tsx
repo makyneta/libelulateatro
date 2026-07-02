@@ -269,14 +269,6 @@ function HeroSection({
 
       <div className="mx-auto flex min-h-[78vh] max-w-6xl items-center px-5 pb-20 pt-24 sm:min-h-[80vh] sm:px-8 sm:pt-32 md:min-h-[88vh]">
         <div className="max-w-3xl animate-fade-up">
-          <p
-            className={`text-xs font-medium uppercase tracking-[0.3em] ${
-              hasImages ? "text-accent-foreground/90" : "text-accent"
-            }`}
-            style={hasImages ? { color: "hsl(var(--accent) / 1)" } : undefined}
-          >
-            Leiria · Portugal
-          </p>
           <h1
             className={`mt-6 font-display text-5xl leading-[1.05] tracking-tight drop-shadow-sm sm:text-6xl md:text-7xl ${
               hasImages ? "text-white" : "text-foreground"
