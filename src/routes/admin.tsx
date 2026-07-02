@@ -567,6 +567,9 @@ function ContentAdmin() {
   const [sobreTitulo, setSobreTitulo] = useState("");
   const [sobreTexto, setSobreTexto] = useState("");
   const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [diretores, setDiretores] = useState<
+    { nome: string; descricao: string; imagem_url: string | null }[]
+  >([]);
   const [loaded, setLoaded] = useState(false);
 
   if (data && !loaded) {
@@ -576,6 +579,12 @@ function ContentAdmin() {
     setSobreTitulo(data.sobre_titulo ?? "");
     setSobreTexto(data.sobre_texto ?? "");
     setHeroImages(Array.isArray(data.hero_images) ? (data.hero_images as string[]) : []);
+    setDiretores(
+      Array.isArray((data as { diretores?: unknown }).diretores)
+        ? ((data as { diretores: { nome: string; descricao: string; imagem_url: string | null }[] })
+            .diretores)
+        : [],
+    );
   }
 
   function move(i: number, dir: -1 | 1) {
@@ -608,6 +617,13 @@ function ContentAdmin() {
               sobre_titulo: sobreTitulo || null,
               sobre_texto: sobreTexto || null,
               hero_images: heroImages,
+              diretores: diretores
+                .filter((d) => d.nome.trim())
+                .map((d) => ({
+                  nome: d.nome.trim(),
+                  descricao: d.descricao,
+                  imagem_url: d.imagem_url || null,
+                })),
             },
           });
           qc.invalidateQueries({ queryKey: ["admin-settings"] });
@@ -698,6 +714,77 @@ function ContentAdmin() {
             multiline
             rows={6}
           />
+        </fieldset>
+
+        <fieldset className="space-y-4 rounded-lg border border-border bg-background p-5">
+          <legend className="px-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Diretores artísticos
+          </legend>
+          {diretores.length === 0 && (
+            <p className="rounded-md border border-dashed border-border bg-secondary/30 px-4 py-6 text-center text-xs text-muted-foreground">
+              Sem diretores. Adicione o primeiro.
+            </p>
+          )}
+          <div className="space-y-6">
+            {diretores.map((d, i) => (
+              <div key={i} className="space-y-3 rounded-md border border-border bg-card p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                    Diretor {i + 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setDiretores((cur) => cur.filter((_, idx) => idx !== i))
+                    }
+                    className="inline-flex items-center gap-1 rounded p-1 text-destructive hover:bg-destructive/10"
+                    aria-label="Remover diretor"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <AdminField
+                  label="Nome"
+                  value={d.nome}
+                  onChange={(v) =>
+                    setDiretores((cur) =>
+                      cur.map((x, idx) => (idx === i ? { ...x, nome: v } : x)),
+                    )
+                  }
+                />
+                <ImageField
+                  label="Fotografia"
+                  value={d.imagem_url ?? ""}
+                  onChange={(v) =>
+                    setDiretores((cur) =>
+                      cur.map((x, idx) => (idx === i ? { ...x, imagem_url: v || null } : x)),
+                    )
+                  }
+                  folder="diretores"
+                />
+                <AdminField
+                  label="Descrição"
+                  value={d.descricao}
+                  onChange={(v) =>
+                    setDiretores((cur) =>
+                      cur.map((x, idx) => (idx === i ? { ...x, descricao: v } : x)),
+                    )
+                  }
+                  multiline
+                  rows={5}
+                />
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              setDiretores((cur) => [...cur, { nome: "", descricao: "", imagem_url: null }])
+            }
+            className={btnSecondary}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Adicionar diretor
+          </button>
         </fieldset>
 
         <div className="flex justify-end"><button type="submit" className={btnPrimary}>Guardar</button></div>
