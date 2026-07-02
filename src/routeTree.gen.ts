@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PecasRouteImport } from './routes/pecas'
 import { Route as ContactosRouteImport } from './routes/contactos'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PecasIndexRouteImport } from './routes/pecas.index'
 import { Route as PecasSlugRouteImport } from './routes/pecas.$slug'
 
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/contactos': typeof ContactosRoute
   '/pecas': typeof PecasRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
   '/pecas/$slug': typeof PecasSlugRoute
   '/pecas/': typeof PecasIndexRoute
 }
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/bilhetes': typeof BilhetesRoute
   '/contactos': typeof ContactosRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
   '/pecas/$slug': typeof PecasSlugRoute
   '/pecas': typeof PecasIndexRoute
 }
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/contactos': typeof ContactosRoute
   '/pecas': typeof PecasRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sobre': typeof SobreRoute
   '/pecas/$slug': typeof PecasSlugRoute
   '/pecas/': typeof PecasIndexRoute
 }
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/contactos'
     | '/pecas'
     | '/sitemap.xml'
+    | '/sobre'
     | '/pecas/$slug'
     | '/pecas/'
   fileRoutesByTo: FileRoutesByTo
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/bilhetes'
     | '/contactos'
     | '/sitemap.xml'
+    | '/sobre'
     | '/pecas/$slug'
     | '/pecas'
   id:
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/contactos'
     | '/pecas'
     | '/sitemap.xml'
+    | '/sobre'
     | '/pecas/$slug'
     | '/pecas/'
   fileRoutesById: FileRoutesById
@@ -128,10 +140,18 @@ export interface RootRouteChildren {
   ContactosRoute: typeof ContactosRoute
   PecasRoute: typeof PecasRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SobreRoute: typeof SobreRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -210,6 +230,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactosRoute: ContactosRoute,
   PecasRoute: PecasRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SobreRoute: SobreRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
