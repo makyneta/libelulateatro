@@ -101,6 +101,7 @@ export type Database = {
         Row: {
           admin_password_hash: string | null
           admin_password_salt: string | null
+          diretores: Json
           hero_images: Json
           hero_subtitle: string | null
           hero_title: string | null
@@ -114,6 +115,7 @@ export type Database = {
         Insert: {
           admin_password_hash?: string | null
           admin_password_salt?: string | null
+          diretores?: Json
           hero_images?: Json
           hero_subtitle?: string | null
           hero_title?: string | null
@@ -127,6 +129,7 @@ export type Database = {
         Update: {
           admin_password_hash?: string | null
           admin_password_salt?: string | null
+          diretores?: Json
           hero_images?: Json
           hero_subtitle?: string | null
           hero_title?: string | null

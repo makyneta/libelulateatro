@@ -6,6 +6,7 @@ import { LibelulaLogo } from "./libelula-logo";
 const NAV = [
   { to: "/", label: "Início" },
   { to: "/pecas", label: "Peças" },
+  { to: "/sobre", label: "Sobre" },
   { to: "/bilhetes", label: "Bilhetes" },
   { to: "/contactos", label: "Contactos" },
 ] as const;

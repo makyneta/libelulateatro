@@ -132,6 +132,7 @@ export const updateContent = createServerFn({ method: "POST" })
     sobre_titulo?: string | null;
     sobre_texto?: string | null;
     hero_images?: string[];
+    diretores?: { nome: string; descricao: string; imagem_url: string | null }[];
   }) =>
     z
       .object({
@@ -140,6 +141,16 @@ export const updateContent = createServerFn({ method: "POST" })
         sobre_titulo: z.string().max(200).nullable().optional(),
         sobre_texto: z.string().max(3000).nullable().optional(),
         hero_images: z.array(z.string().url()).max(20).optional(),
+        diretores: z
+          .array(
+            z.object({
+              nome: z.string().trim().min(1).max(200),
+              descricao: z.string().trim().max(2000),
+              imagem_url: z.string().url().nullable(),
+            }),
+          )
+          .max(10)
+          .optional(),
       })
       .parse(d),
   )
@@ -152,6 +163,7 @@ export const updateContent = createServerFn({ method: "POST" })
       sobre_titulo?: string | null;
       sobre_texto?: string | null;
       hero_images?: string[];
+      diretores?: { nome: string; descricao: string; imagem_url: string | null }[];
       updated_at: string;
     } = { updated_at: new Date().toISOString() };
     if (data.hero_title !== undefined) patch.hero_title = data.hero_title;
@@ -159,6 +171,7 @@ export const updateContent = createServerFn({ method: "POST" })
     if (data.sobre_titulo !== undefined) patch.sobre_titulo = data.sobre_titulo;
     if (data.sobre_texto !== undefined) patch.sobre_texto = data.sobre_texto;
     if (data.hero_images !== undefined) patch.hero_images = data.hero_images;
+    if (data.diretores !== undefined) patch.diretores = data.diretores;
     const { error } = await sb.from("site_settings").update(patch).eq("id", 1);
     if (error) throw new Error(error.message);
     return { ok: true as const };
@@ -350,7 +363,7 @@ export const getAdminSettings = createServerFn({ method: "GET" }).handler(async 
   const sb = await adminClient();
   const { data } = await sb
     .from("site_settings")
-    .select("logo_url,logo_dark_url,hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images")
+    .select("logo_url,logo_dark_url,hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images,diretores")
     .eq("id", 1)
     .maybeSingle();
   return (
@@ -362,6 +375,7 @@ export const getAdminSettings = createServerFn({ method: "GET" }).handler(async 
       sobre_titulo: null,
       sobre_texto: null,
       hero_images: [] as string[],
+      diretores: [] as { nome: string; descricao: string; imagem_url: string | null }[],
     }
   );
 });

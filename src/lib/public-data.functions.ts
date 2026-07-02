@@ -38,6 +38,13 @@ export type SiteSettings = {
   sobre_titulo: string | null;
   sobre_texto: string | null;
   hero_images: string[];
+  diretores: Diretor[];
+};
+
+export type Diretor = {
+  nome: string;
+  descricao: string;
+  imagem_url: string | null;
 };
 
 const PECAS_COLS =
@@ -49,7 +56,7 @@ export const getSiteSettings = createServerFn({ method: "GET" }).handler(
     const sb = publicClient();
     const { data } = await sb
       .from("site_settings")
-      .select("logo_url,logo_dark_url,hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images")
+      .select("logo_url,logo_dark_url,hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images,diretores")
       .eq("id", 1)
       .maybeSingle();
     return {
@@ -60,6 +67,7 @@ export const getSiteSettings = createServerFn({ method: "GET" }).handler(
       sobre_titulo: data?.sobre_titulo ?? null,
       sobre_texto: data?.sobre_texto ?? null,
       hero_images: Array.isArray(data?.hero_images) ? (data!.hero_images as string[]) : [],
+      diretores: Array.isArray(data?.diretores) ? (data!.diretores as Diretor[]) : [],
     };
   },
 );
@@ -124,7 +132,7 @@ export const listHomepageData = createServerFn({ method: "GET" }).handler(async 
       .limit(2),
     sb
       .from("site_settings")
-      .select("hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images")
+      .select("hero_title,hero_subtitle,sobre_titulo,sobre_texto,hero_images,diretores")
       .eq("id", 1)
       .maybeSingle(),
   ]);
@@ -145,6 +153,7 @@ export const listHomepageData = createServerFn({ method: "GET" }).handler(async 
       sobre_titulo: settings?.sobre_titulo ?? null,
       sobre_texto: settings?.sobre_texto ?? null,
       hero_images: Array.isArray(settings?.hero_images) ? (settings!.hero_images as string[]) : [],
+      diretores: Array.isArray(settings?.diretores) ? (settings!.diretores as Diretor[]) : [],
     },
   };
 });
