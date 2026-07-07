@@ -65,64 +65,111 @@ function PecaPage() {
 
   return (
     <SiteShell>
-      <article className="mx-auto max-w-5xl px-5 pb-24 pt-12 sm:px-8 sm:pt-16">
+      <article className="mx-auto max-w-6xl px-5 pb-8 pt-12 sm:px-8 sm:pt-16">
         <Link
           to="/pecas"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground hover:text-accent"
+          className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground hover:text-accent"
         >
-          <ArrowLeft className="h-3.5 w-3.5" /> Todas as peças
+          <ArrowLeft className="h-3.5 w-3.5" /> Arquivo de peças
         </Link>
 
-        <div className="mt-10 grid gap-12 md:grid-cols-[minmax(0,1fr)_1fr]">
-          <div className="aspect-[3/4] overflow-hidden bg-muted">
-            {peca.imagem_url ? (
-              <img src={peca.imagem_url} alt={peca.nome} className="h-full w-full object-cover" />
-            ) : (
-              <PosterPlaceholder text={peca.nome} />
-            )}
+        <header className="mt-10 grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <div className="aspect-[3/4] overflow-hidden bg-muted">
+              {peca.imagem_url ? (
+                <img
+                  src={peca.imagem_url}
+                  alt={peca.nome}
+                  className="h-full w-full object-cover grayscale transition-all duration-700 hover:grayscale-0"
+                />
+              ) : (
+                <PosterPlaceholder text={peca.nome} />
+              )}
+            </div>
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-accent">{peca.ano}</p>
-            <h1 className="mt-3 font-display text-4xl leading-tight tracking-tight sm:text-5xl">
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-4">
+              <span className="font-display text-lg italic text-muted-foreground/70">Peça</span>
+              <span className="h-px w-8 bg-border" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.35em]">
+                {peca.ano ?? "—"}
+              </span>
+            </div>
+            <h1 className="mt-6 font-display text-5xl italic leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
               {peca.nome}
             </h1>
-            <div className="prose prose-neutral mt-6 max-w-none text-base leading-relaxed text-foreground/85">
+            {peca.descricao_breve && (
+              <p className="mt-8 max-w-xl text-lg leading-relaxed text-foreground/85">
+                {peca.descricao_breve}
+              </p>
+            )}
+          </div>
+        </header>
+      </article>
+
+      <section className="border-t border-border/60 bg-secondary/30">
+        <div className="mx-auto grid max-w-6xl gap-16 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
+                Sinopse
+              </p>
+              <div className="mt-4 h-px w-12 bg-accent" />
+            </div>
+          </div>
+          <div className="lg:col-span-8">
+            <div className="space-y-5 text-base leading-relaxed text-foreground/85 sm:text-lg">
               {(peca.descricao_completa ?? peca.descricao_breve ?? "")
                 .split(/\n\n+/)
                 .map((para, i) => (
-                  <p key={i} className="mb-4">
-                    {para}
-                  </p>
+                  <p key={i}>{para}</p>
                 ))}
             </div>
             {peca.ficha_tecnica && (
-              <div className="mt-8 border-t border-border/60 pt-6">
-                <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <div className="mt-12 border-t border-border/60 pt-8">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
                   Ficha técnica
-                </h2>
-                <p className="mt-3 whitespace-pre-line text-sm text-foreground/80">
+                </p>
+                <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-foreground/80">
                   {peca.ficha_tecnica}
                 </p>
               </div>
             )}
           </div>
         </div>
+      </section>
 
-        <section className="mt-20">
-          <h2 className="font-display text-2xl">Apresentações desta peça</h2>
-          <div className="mt-6">
-            {apres.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                Sem apresentações agendadas neste momento.
+      <section className="border-t border-border/60">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+          <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border/60 pb-6">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
+                Agenda
               </p>
-            ) : (
-              apres.map((a) => (
-                <ApresentacaoRow key={a.id} apres={a} peca={peca} withPecaLink={false} />
-              ))
-            )}
+              <h2 className="mt-3 font-display text-3xl italic tracking-tight sm:text-4xl">
+                Apresentações desta peça
+              </h2>
+            </div>
           </div>
-        </section>
-      </article>
+          {apres.length === 0 ? (
+            <p className="mt-12 text-center text-sm italic text-muted-foreground">
+              Sem apresentações agendadas neste momento.
+            </p>
+          ) : (
+            <div>
+              <div className="mt-6 hidden gap-x-6 border-b border-border/40 pb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground/70 md:grid md:grid-cols-[10rem_1fr_1fr_auto]">
+                <span>Data</span>
+                <span>Espectáculo</span>
+                <span>Local</span>
+                <span className="text-right">Bilhetes</span>
+              </div>
+              {apres.map((a) => (
+                <ApresentacaoRow key={a.id} apres={a} peca={peca} withPecaLink={false} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
     </SiteShell>
   );
 }
