@@ -77,21 +77,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Libélula Teatro" },
+      { title: "Libélula Teatro — Companhia de teatro · Leiria" },
       {
         name: "description",
         content:
           "Libélula Teatro é uma companhia portuguesa sediada na Marinha Grande. Espectáculos, peças em digressão e bilhetes.",
       },
       { name: "author", content: "Libélula Teatro" },
-      { property: "og:title", content: "Libélula Teatro" },
+      { property: "og:title", content: "Libélula Teatro — Companhia de teatro · Leiria" },
       {
         property: "og:description",
         content: "Companhia de teatro · Marinha Grande, Portugal.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Libélula Teatro" },
+      { name: "twitter:title", content: "Libélula Teatro — Companhia de teatro · Leiria" },
       { name: "description", content: "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes." },
       { property: "og:description", content: "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes." },
       { name: "twitter:description", content: "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes." },
