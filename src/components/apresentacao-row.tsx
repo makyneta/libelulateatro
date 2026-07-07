@@ -34,53 +34,55 @@ export function ApresentacaoRow({
   const past = isPast(apres.data) || apres.forcar_sold_out;
   const date = formatData(apres.data);
   return (
-    <article className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 border-b border-border/60 py-6 last:border-b-0 sm:gap-8">
-      <div className="flex w-16 flex-col items-center text-center sm:w-20">
-        <span className="font-display text-3xl font-medium text-foreground sm:text-4xl">{date.dia}</span>
-        <span className="text-xs uppercase tracking-widest text-muted-foreground">{date.mes}</span>
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground/70">{date.ano}</span>
+    <article
+      className={`group grid grid-cols-1 gap-3 border-b border-border/50 py-8 last:border-b-0 md:grid-cols-[10rem_1fr_1fr_auto] md:items-center md:gap-6 ${
+        past ? "opacity-70" : ""
+      }`}
+    >
+      <div className="font-display text-xl italic text-accent">
+        <span className="tabular-nums">{date.dia}</span> {date.mes}{" "}
+        <span className="text-muted-foreground/70">{date.ano}</span>
+        {apres.hora && (
+          <span className="ml-2 text-sm not-italic text-muted-foreground">
+            · {apres.hora.slice(0, 5)}
+          </span>
+        )}
       </div>
       <div className="min-w-0">
         {peca && withPecaLink ? (
           <Link
             to="/pecas/$slug"
             params={{ slug: peca.slug }}
-            className="font-display text-lg leading-tight text-foreground transition-colors hover:text-accent sm:text-xl"
+            className="font-display text-2xl leading-snug transition-colors hover:text-accent"
           >
             {peca.nome}
           </Link>
         ) : peca ? (
-          <p className="font-display text-lg leading-tight text-foreground sm:text-xl">{peca.nome}</p>
-        ) : null}
-        <p className="mt-1 truncate text-sm text-muted-foreground">
-          {apres.hora ? apres.hora.slice(0, 5) : ""}
-          {apres.hora && apres.local ? " · " : ""}
-          {apres.local ?? ""}
-        </p>
+          <span className="font-display text-2xl leading-snug">{peca.nome}</span>
+        ) : (
+          <span className="font-display text-2xl">—</span>
+        )}
       </div>
-      <div className="shrink-0">
+      <div className="text-sm text-muted-foreground">{apres.local ?? "—"}</div>
+      <div className="md:text-right">
         {past ? (
-          <span className="inline-flex items-center rounded-full border border-foreground/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground/70">
-            Sold out
+          <span className="inline-block text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+            {apres.forcar_sold_out ? "Esgotado" : "Passado"}
           </span>
         ) : apres.link_bilhetes ? (
           <a
             href={apres.link_bilhetes}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full bg-accent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-accent-foreground transition hover:opacity-90"
+            className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-accent hover:underline"
           >
-            Comprar <ArrowUpRight className="h-3.5 w-3.5" />
+            Reservar <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
-        ) : peca ? (
-          <Link
-            to="/pecas/$slug"
-            params={{ slug: peca.slug }}
-            className="text-xs font-semibold uppercase tracking-widest text-foreground/80 hover:text-accent"
-          >
-            Saber mais
-          </Link>
-        ) : null}
+        ) : (
+          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+            Em breve
+          </span>
+        )}
       </div>
     </article>
   );
