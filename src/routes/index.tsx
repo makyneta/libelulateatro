@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Facebook, Instagram, Mail, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
-import { listHomepageData } from "@/lib/public-data.functions";
+import { listHomepageData, type Apresentacao, type Peca } from "@/lib/public-data.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,9 +36,9 @@ function ErrorComp() {
 
 function HomePage() {
   const data = Route.useLoaderData();
-  const proximas = data.proximas;
-  const pecasMap = data.pecasMap;
-  const ultimas = data.ultimasPecas;
+  const proximas: Apresentacao[] = data.proximas;
+  const pecasMap: Record<string, Peca> = data.pecasMap;
+  const ultimas: Peca[] = data.ultimasPecas;
   const settings = data.settings;
   const heroImages = settings?.hero_images ?? [];
   const heroTitle = settings?.hero_title ?? "Libélula Teatro";
