@@ -47,35 +47,74 @@ function BilhetesPage() {
 
   return (
     <SiteShell>
-      <section className="mx-auto max-w-4xl px-5 pb-24 pt-16 sm:px-8 sm:pt-24">
-        <header className="animate-fade-up">
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">Agenda</p>
-          <h1 className="mt-4 font-display text-5xl tracking-tight sm:text-6xl">Bilhetes</h1>
-          <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-            Próximas apresentações em digressão. Para datas esgotadas, fica o registo de que
-            estivemos por lá.
-          </p>
+      <section className="mx-auto max-w-6xl px-5 pb-24 pt-20 sm:px-8 sm:pt-28">
+        <header className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-4">
+            <div className="flex items-center gap-4">
+              <span className="font-display text-lg italic text-muted-foreground/70">03</span>
+              <span className="h-px w-8 bg-border" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.35em]">Agenda</span>
+            </div>
+            <div className="mt-6 h-px w-12 bg-accent" />
+          </div>
+          <div className="lg:col-span-8">
+            <h1 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+              Bilhetes <span className="italic">& datas</span>
+            </h1>
+            <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              Próximas apresentações em digressão. Para datas esgotadas, fica o registo de que
+              estivemos por lá.
+            </p>
+          </div>
         </header>
 
-        <div className="mt-16">
-          <h2 className="font-display text-2xl">Próximas apresentações</h2>
-          <div className="mt-6">
-            {futuras.length === 0 ? (
-              <p className="rounded-md border border-dashed border-border bg-secondary/30 px-6 py-8 text-sm text-muted-foreground">
-                Não há apresentações agendadas neste momento.
-              </p>
-            ) : (
-              futuras.map((a) => (
-                <ApresentacaoRow key={a.id} apres={a} peca={pecasMap[a.peca_id]} />
-              ))
-            )}
+        <div className="mt-20">
+          <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border/60 pb-6">
+            <h2 className="font-display text-3xl italic tracking-tight sm:text-4xl">
+              Próximas apresentações
+            </h2>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+              {futuras.length} {futuras.length === 1 ? "data" : "datas"}
+            </span>
           </div>
+          {futuras.length === 0 ? (
+            <p className="mt-16 text-center text-sm italic text-muted-foreground">
+              Sem apresentações agendadas neste momento.
+            </p>
+          ) : (
+            <>
+              <div className="mt-6 hidden gap-x-6 border-b border-border/40 pb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground/70 md:grid md:grid-cols-[10rem_1fr_1fr_auto]">
+                <span>Data</span>
+                <span>Espectáculo</span>
+                <span>Local</span>
+                <span className="text-right">Bilhetes</span>
+              </div>
+              <div>
+                {futuras.map((a) => (
+                  <ApresentacaoRow key={a.id} apres={a} peca={pecasMap[a.peca_id]} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {passadas.length > 0 && (
-          <div className="mt-20">
-            <h2 className="font-display text-2xl">Apresentações passadas</h2>
-            <div className="mt-6 opacity-90">
+          <div className="mt-24">
+            <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border/60 pb-6">
+              <h2 className="font-display text-3xl italic tracking-tight sm:text-4xl">
+                Arquivo de apresentações
+              </h2>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                {passadas.length} {passadas.length === 1 ? "registo" : "registos"}
+              </span>
+            </div>
+            <div className="mt-6 hidden gap-x-6 border-b border-border/40 pb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground/70 md:grid md:grid-cols-[10rem_1fr_1fr_auto]">
+              <span>Data</span>
+              <span>Espectáculo</span>
+              <span>Local</span>
+              <span className="text-right">Estado</span>
+            </div>
+            <div>
               {passadas.map((a) => (
                 <ApresentacaoRow key={a.id} apres={a} peca={pecasMap[a.peca_id]} />
               ))}
