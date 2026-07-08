@@ -29,39 +29,41 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
-        <Link to="/" className="flex items-center" aria-label="Libélula Teatro — início">
-          <LibelulaLogo size={36} />
-        </Link>
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Navegação principal">
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              activeOptions={{ exact: item.to === "/" }}
-              activeProps={{ className: "text-foreground" }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Abrir menu"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-foreground transition hover:text-accent md:hidden"
-        >
-          <span aria-hidden="true" className="flex flex-col items-end gap-[5px]">
-            <span className="block h-px w-6 bg-current" />
-            <span className="block h-px w-4 bg-current" />
-          </span>
-          <span>Menu</span>
-        </button>
-      </div>
+    <>
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+          <Link to="/" className="flex items-center" aria-label="Libélula Teatro — início">
+            <LibelulaLogo size={36} />
+          </Link>
+          <nav className="hidden items-center gap-8 md:flex" aria-label="Navegação principal">
+            {NAV.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                activeOptions={{ exact: item.to === "/" }}
+                activeProps={{ className: "text-foreground" }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Abrir menu"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-foreground transition hover:text-accent md:hidden"
+          >
+            <span aria-hidden="true" className="flex flex-col items-end gap-[5px]">
+              <span className="block h-px w-6 bg-current" />
+              <span className="block h-px w-4 bg-current" />
+            </span>
+            <span>Menu</span>
+          </button>
+        </div>
+      </header>
 
       <div
         id="mobile-nav"
@@ -69,7 +71,7 @@ export function SiteHeader() {
         aria-modal="true"
         aria-label="Menu principal"
         aria-hidden={!open}
-        className={`fixed inset-0 z-50 flex flex-col bg-background transition-opacity duration-300 md:hidden ${
+        className={`fixed left-0 top-0 z-[100] flex h-[100dvh] w-screen flex-col overflow-hidden bg-background transition-opacity duration-300 md:hidden ${
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
@@ -119,6 +121,6 @@ export function SiteHeader() {
           </p>
         </div>
       </div>
-    </header>
+    </>
   );
 }
