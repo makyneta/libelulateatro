@@ -175,4 +175,10 @@
     background: var(--color-accent);
     color: var(--color-accent-foreground);
   }
+
+  .mobile-menu-overlay {
+    z-index: 2147483647;
+    background: oklch(1 0 0);
+    color: var(--color-foreground);
+  }
 }
