@@ -91,9 +91,9 @@ export function SiteHeader() {
 
         <nav
           aria-label="Navegação móvel"
-          className="flex flex-1 flex-col justify-center overflow-y-auto bg-background px-8 py-10"
+          className="flex-1 overflow-y-auto bg-background px-6 py-8 sm:px-8"
         >
-          <ul className="mx-auto flex w-full max-w-lg flex-col gap-2">
+          <ul className="mx-auto flex w-full max-w-lg flex-col">
             {NAV.map((item, i) => (
               <li key={item.to}>
                 <Link
@@ -101,9 +101,9 @@ export function SiteHeader() {
                   onClick={() => setOpen(false)}
                   activeOptions={{ exact: item.to === "/" }}
                   activeProps={{ className: "text-accent" }}
-                  className="group flex items-baseline gap-6 border-b border-border/60 py-5 font-display text-4xl text-foreground transition-colors hover:text-accent sm:text-5xl"
+                  className="group flex items-baseline gap-5 border-b border-border/60 py-4 font-display text-3xl text-foreground transition-colors hover:text-accent sm:text-4xl"
                 >
-                  <span className="w-10 shrink-0 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                  <span className="w-8 shrink-0 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="italic">{item.label}</span>
