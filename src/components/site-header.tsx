@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
 import { LibelulaLogo } from "./libelula-logo";
 
 const NAV = [
@@ -65,75 +65,59 @@ export function SiteHeader() {
 
       <div
         id="mobile-nav"
-        className={`fixed inset-0 z-50 md:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu principal"
         aria-hidden={!open}
+        className={`fixed inset-0 z-50 flex flex-col bg-background transition-opacity duration-300 md:hidden ${
+          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
       >
-        <button
-          type="button"
-          tabIndex={open ? 0 : -1}
-          aria-label="Fechar menu"
-          onClick={() => setOpen(false)}
-          className={`absolute inset-0 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 ${
-            open ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        <aside
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu principal"
-          className={`absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col bg-background shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-[cubic-bezier(.22,.61,.36,1)] ${
-            open ? "translate-x-0" : "translate-x-full"
-          }`}
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-border/60 bg-background px-5 sm:px-8">
+          <Link to="/" onClick={() => setOpen(false)} aria-label="Libélula Teatro — início">
+            <LibelulaLogo size={32} />
+          </Link>
+          <button
+            type="button"
+            tabIndex={open ? 0 : -1}
+            onClick={() => setOpen(false)}
+            aria-label="Fechar menu"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-foreground shadow-sm transition hover:border-foreground hover:text-accent"
+          >
+            <span>Fechar</span>
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+
+        <nav
+          aria-label="Navegação móvel"
+          className="flex flex-1 flex-col justify-center overflow-y-auto bg-background px-8 py-10"
         >
-          <div className="flex h-16 items-center justify-between border-b border-border/60 px-5">
-            <Link to="/" onClick={() => setOpen(false)} aria-label="Libélula Teatro — início">
-              <LibelulaLogo size={32} />
-            </Link>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Fechar menu"
-              className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition hover:text-foreground"
-            >
-              <span>Fechar</span>
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+          <ul className="mx-auto flex w-full max-w-lg flex-col gap-2">
+            {NAV.map((item, i) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  activeOptions={{ exact: item.to === "/" }}
+                  activeProps={{ className: "text-accent" }}
+                  className="group flex items-baseline gap-6 border-b border-border/60 py-5 font-display text-4xl text-foreground transition-colors hover:text-accent sm:text-5xl"
+                >
+                  <span className="w-10 shrink-0 text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="italic">{item.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-          <div className="px-6 pt-8">
-            <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-              Navegação
-            </span>
-          </div>
-
-          <nav className="flex flex-1 flex-col px-6 pt-4" aria-label="Navegação móvel">
-            <ul className="flex flex-col divide-y divide-border/60">
-              {NAV.map((item, i) => (
-                <li key={item.to}>
-                  <Link
-                    to={item.to}
-                    onClick={() => setOpen(false)}
-                    activeOptions={{ exact: item.to === "/" }}
-                    activeProps={{ className: "text-accent" }}
-                    className="group flex items-baseline gap-4 py-5 font-display text-2xl text-foreground transition-colors hover:text-accent"
-                  >
-                    <span className="w-8 text-[10px] font-medium uppercase tracking-[0.24em] text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="italic">{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="border-t border-border/60 px-6 py-6">
-            <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-              Libélula Teatro
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">Leiria · Portugal</p>
-          </div>
-        </aside>
+        <div className="shrink-0 border-t border-border/60 bg-background px-8 py-6 text-center">
+          <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+            Libélula Teatro · Leiria · Portugal
+          </p>
+        </div>
       </div>
     </header>
   );
