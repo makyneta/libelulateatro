@@ -194,28 +194,35 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-px border border-border/60 bg-border/60 sm:grid-cols-2">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
             {ultimas.map((p, i) => (
               <Link
                 key={p.id}
                 to="/pecas/$slug"
                 params={{ slug: p.slug }}
-                className="group block bg-background p-6 transition-colors hover:bg-secondary/40 sm:p-8"
+                className="group relative block overflow-hidden rounded-2xl border border-border bg-card/50 transition-all hover:border-accent/50"
               >
-                <div className="aspect-[4/5] overflow-hidden bg-muted">
+                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
                   {p.imagem_url ? (
                     <img
                       src={p.imagem_url}
                       alt={p.nome}
                       loading="lazy"
-                      className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
+                      className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
                     />
                   ) : (
                     <PosterPlaceholder text={p.nome} />
                   )}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90"
+                  />
+                  <span className="absolute left-5 top-5 inline-flex items-center rounded-full border border-border/60 bg-background/70 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.24em] text-foreground/80 backdrop-blur">
+                    {p.ano ?? "Repertório"}
+                  </span>
                 </div>
-                <div className="mt-6 flex items-baseline justify-between gap-4">
-                  <div>
+                <div className="flex items-baseline justify-between gap-4 p-6 sm:p-7">
+                  <div className="min-w-0">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
                       Nº {String(i + 1).padStart(2, "0")} · {p.ano ?? "—"}
                     </p>
@@ -223,7 +230,7 @@ function HomePage() {
                       {p.nome}
                     </h3>
                   </div>
-                  <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
+                  <ArrowUpRight className="h-5 w-5 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
                 </div>
               </Link>
             ))}
@@ -232,36 +239,40 @@ function HomePage() {
       </section>
 
       {/* CONTACTO */}
-      <section className="border-t-2 border-accent/80 bg-foreground text-background">
-        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-12">
+      <section className="relative overflow-hidden border-t border-accent/40 bg-card/40">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl"
+        />
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <SectionMarker n="04" label="Contacto" tone="inverse" />
+            <SectionMarker n="04" label="Contacto" />
             <h2 className="mt-6 font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-              Fale connosco sobre <span className="italic text-accent-foreground/90">programação, residências e parcerias.</span>
+              Fale connosco sobre <span className="italic text-accent">programação, residências e parcerias.</span>
             </h2>
             <a
               href="mailto:libelula.t@gmail.com"
-              className="mt-10 inline-block break-words border-b border-background/40 pb-2 font-display text-2xl italic transition-colors hover:border-background sm:text-4xl"
+              className="mt-10 inline-block break-words border-b border-border pb-2 font-display text-2xl italic transition-colors hover:border-accent hover:text-accent sm:text-4xl"
             >
               libelula.t@gmail.com
             </a>
           </div>
           <div className="lg:col-span-4 lg:col-start-9">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-background/50">Redes</p>
-            <ul className="mt-6 space-y-4 text-base">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">Redes</p>
+            <ul className="mt-6 space-y-3 text-sm">
               <li>
-                <a href="https://instagram.com/libelula.teatro" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 text-background/80 hover:text-background">
-                  <Instagram className="h-4 w-4" /> @libelula.teatro
+                <a href="https://instagram.com/libelula.teatro" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2 transition-colors hover:border-accent/60 hover:text-accent">
+                  <Instagram className="h-4 w-4 shrink-0" /> @libelula.teatro
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/libelulateatro.t" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 text-background/80 hover:text-background">
-                  <Facebook className="h-4 w-4" /> Facebook
+                <a href="https://www.facebook.com/libelulateatro.t" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2 transition-colors hover:border-accent/60 hover:text-accent">
+                  <Facebook className="h-4 w-4 shrink-0" /> Facebook
                 </a>
               </li>
               <li>
-                <a href="mailto:libelula.t@gmail.com" className="inline-flex items-center gap-3 text-background/80 hover:text-background">
-                  <Mail className="h-4 w-4" /> Email direto
+                <a href="mailto:libelula.t@gmail.com" className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2 transition-colors hover:border-accent/60 hover:text-accent">
+                  <Mail className="h-4 w-4 shrink-0" /> Email direto
                 </a>
               </li>
             </ul>
