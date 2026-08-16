@@ -77,7 +77,14 @@ export function SiteHeader() {
             </ul>
           </nav>
 
-          <div className="shrink-0 border-t border-border/60 px-8 py-6 text-center">
+          <div className="shrink-0 border-t border-border/60 px-6 py-6 text-center sm:px-8">
+            <Link
+              to="/bilhetes"
+              onClick={() => setOpen(false)}
+              className="mb-5 inline-flex w-full items-center justify-center rounded-full bg-accent px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.26em] text-accent-foreground"
+            >
+              Reservar bilhetes
+            </Link>
             <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
               Libélula Teatro · Leiria · Portugal
             </p>
