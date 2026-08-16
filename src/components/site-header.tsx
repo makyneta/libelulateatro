@@ -77,7 +77,14 @@ export function SiteHeader() {
             </ul>
           </nav>
 
-          <div className="shrink-0 border-t border-border/60 px-8 py-6 text-center">
+          <div className="shrink-0 border-t border-border/60 px-6 py-6 text-center sm:px-8">
+            <Link
+              to="/bilhetes"
+              onClick={() => setOpen(false)}
+              className="mb-5 inline-flex w-full items-center justify-center rounded-full bg-accent px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.26em] text-accent-foreground"
+            >
+              Reservar bilhetes
+            </Link>
             <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
               Libélula Teatro · Leiria · Portugal
             </p>
@@ -89,23 +96,30 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <header className="glass-panel sticky top-0 z-40">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:h-20 sm:px-8">
           <Link to="/" className="flex items-center" aria-label="Libélula Teatro — início">
             <LibelulaLogo size={36} />
           </Link>
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Navegação principal">
+          <nav className="hidden items-center gap-9 md:flex" aria-label="Navegação principal">
             {NAV.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="nav-underline text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:text-foreground"
                 activeOptions={{ exact: item.to === "/" }}
-                activeProps={{ className: "text-foreground" }}
+                activeProps={{ className: "text-accent" }}
               >
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/bilhetes"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground transition-all hover:brightness-110"
+              style={{ boxShadow: "var(--shadow-glow)" }}
+            >
+              Reservar
+            </Link>
           </nav>
           <button
             type="button"

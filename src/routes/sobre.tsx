@@ -97,19 +97,19 @@ function SobrePage() {
           {diretores.length === 0 ? (
             <p className="mt-16 text-center text-sm italic text-muted-foreground">Em breve.</p>
           ) : (
-            <div className="mt-12 grid gap-px border border-border/60 bg-border/60 sm:grid-cols-2">
+            <div className="mt-12 grid gap-6 sm:grid-cols-2">
               {diretores.map((d, i) => (
                 <article
                   key={`${d.nome}-${i}`}
-                  className="flex flex-col bg-background p-6 sm:p-8"
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card/50 p-6 transition-colors hover:border-accent/50 sm:p-8"
                 >
-                  <div className="aspect-[4/5] overflow-hidden bg-muted">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
                     {d.imagem_url ? (
                       <img
                         src={d.imagem_url}
                         alt={d.nome}
                         loading="lazy"
-                        className="h-full w-full object-cover grayscale transition-all duration-700 hover:grayscale-0"
+                        className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-muted to-secondary p-8 text-center">
