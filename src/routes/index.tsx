@@ -81,8 +81,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* AGENDA — tabular list */}
-      <section className="border-t border-border/60 bg-secondary/30">
+      {/* AGENDA — event cards */}
+      <section className="border-t border-border/60 bg-card/30">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
           <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border/60 pb-8">
             <div>
@@ -98,21 +98,14 @@ function HomePage() {
             </Link>
           </div>
 
-          {proximas.length === 0 ? (
+          {proximas.length === 0 && (
             <p className="mt-16 text-center text-sm italic text-muted-foreground">
               Sem apresentações agendadas neste momento.
             </p>
-          ) : (
-            <div className="mt-6 hidden grid-cols-[0.35em_1fr] gap-x-6 border-b border-border/40 pb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground/70 md:grid md:grid-cols-[10rem_1fr_1fr_auto]">
-              <span>Data</span>
-              <span>Espectáculo</span>
-              <span>Local</span>
-              <span className="text-right">Bilhetes</span>
-            </div>
           )}
 
-          <ul className="divide-y divide-border/50">
-            {proximas.map((a) => {
+          <ul className="mt-10 grid gap-4">
+            {proximas.map((a, index) => {
               const peca = pecasMap[a.peca_id];
               const d = new Date(a.data + "T00:00:00");
               const soldOut = a.forcar_sold_out || d.getTime() < Date.now();
@@ -120,36 +113,62 @@ function HomePage() {
               const mes = d.toLocaleDateString("pt-PT", { month: "short", timeZone: "UTC" }).replace(".", "");
               const ano = d.getUTCFullYear();
               return (
-                <li key={a.id} className="group grid grid-cols-1 gap-3 py-8 md:grid-cols-[10rem_1fr_1fr_auto] md:items-center md:gap-6">
-                  <div className="font-display text-xl italic text-accent">
-                    <span className="tabular-nums">{dia}</span> {mes}{" "}
-                    <span className="text-muted-foreground/70">{ano}</span>
-                    {a.hora && <span className="ml-2 text-sm not-italic text-muted-foreground">· {a.hora.slice(0, 5)}</span>}
+                <li
+                  key={a.id}
+                  className={`group grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 rounded-2xl border border-border bg-card/60 p-5 transition-all hover:border-accent/50 hover:bg-card sm:gap-6 sm:p-6 md:grid-cols-[6rem_minmax(0,1fr)_auto] md:items-center ${
+                    soldOut ? "opacity-60" : ""
+                  }`}
+                >
+                  <div className="flex w-[4.5rem] shrink-0 flex-col items-center rounded-xl border border-border/70 bg-background/60 px-3 py-3 sm:w-24">
+                    <span className="font-display text-3xl leading-none tabular-nums">{dia}</span>
+                    <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">{mes}</span>
+                    <span className="mt-0.5 text-[10px] tabular-nums text-muted-foreground">{ano}</span>
                   </div>
-                  <div>
+                  <div className="min-w-0">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      {soldOut ? (
+                        <span className="inline-flex items-center rounded-full border border-border px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                          Esgotado
+                        </span>
+                      ) : index === 0 ? (
+                        <span className="inline-flex items-center gap-2 rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.24em] text-accent">
+                          <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+                          Próximo espectáculo
+                        </span>
+                      ) : a.link_bilhetes ? (
+                        <span className="inline-flex items-center rounded-full border border-border/80 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
+                          Bilhetes à venda
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full border border-border/80 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
+                          Brevemente
+                        </span>
+                      )}
+                      {a.hora && (
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                          {a.hora.slice(0, 5)}
+                        </span>
+                      )}
+                    </div>
                     {peca ? (
-                      <Link to="/pecas/$slug" params={{ slug: peca.slug }} className="font-display text-2xl leading-snug transition-colors hover:text-accent">
+                      <Link to="/pecas/$slug" params={{ slug: peca.slug }} className="font-display text-2xl leading-snug transition-colors hover:text-accent sm:text-3xl">
                         {peca.nome}
                       </Link>
                     ) : (
                       <span className="font-display text-2xl">—</span>
                     )}
+                    <p className="mt-2 text-sm text-muted-foreground">{a.local ?? "—"}</p>
                   </div>
-                  <div className="text-sm text-muted-foreground">{a.local ?? "—"}</div>
-                  <div className="md:text-right">
-                    {soldOut ? (
-                      <span className="inline-block text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">Esgotado</span>
-                    ) : a.link_bilhetes ? (
+                  <div className="col-span-2 md:col-span-1 md:text-right">
+                    {!soldOut && a.link_bilhetes && (
                       <a
                         href={a.link_bilhetes}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-accent hover:underline"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-accent-foreground transition-all hover:brightness-110 md:w-auto"
                       >
                         Reservar <ArrowUpRight className="h-3.5 w-3.5" />
                       </a>
-                    ) : (
-                      <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Em breve</span>
                     )}
                   </div>
                 </li>
