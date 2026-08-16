@@ -83,13 +83,7 @@ function BilhetesPage() {
             </p>
           ) : (
             <>
-              <div className="mt-6 hidden gap-x-6 border-b border-border/40 pb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground/70 md:grid md:grid-cols-[10rem_1fr_1fr_auto]">
-                <span>Data</span>
-                <span>Espectáculo</span>
-                <span>Local</span>
-                <span className="text-right">Bilhetes</span>
-              </div>
-              <div>
+              <div className="mt-10 grid gap-4">
                 {futuras.map((a) => (
                   <ApresentacaoRow key={a.id} apres={a} peca={pecasMap[a.peca_id]} />
                 ))}
@@ -108,13 +102,7 @@ function BilhetesPage() {
                 {passadas.length} {passadas.length === 1 ? "registo" : "registos"}
               </span>
             </div>
-            <div className="mt-6 hidden gap-x-6 border-b border-border/40 pb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground/70 md:grid md:grid-cols-[10rem_1fr_1fr_auto]">
-              <span>Data</span>
-              <span>Espectáculo</span>
-              <span>Local</span>
-              <span className="text-right">Estado</span>
-            </div>
-            <div>
+            <div className="mt-10 grid gap-4">
               {passadas.map((a) => (
                 <ApresentacaoRow key={a.id} apres={a} peca={pecasMap[a.peca_id]} />
               ))}

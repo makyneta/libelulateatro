@@ -81,7 +81,7 @@ function ContactosPage() {
 
       <section className="border-t border-border/60">
         <div className="mx-auto grid max-w-6xl gap-16 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-12">
-          <form onSubmit={onSubmit} className="space-y-6 lg:col-span-7" noValidate>
+          <form onSubmit={onSubmit} className="space-y-6 rounded-2xl border border-border bg-card/50 p-6 sm:p-8 lg:col-span-7" noValidate>
             <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
               Formulário
             </p>
@@ -93,7 +93,7 @@ function ContactosPage() {
             </div>
             <button
               type="submit"
-              className="group mt-4 inline-flex items-center gap-3 bg-accent px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-foreground transition-colors hover:bg-foreground hover:text-background"
+              className="group mt-4 inline-flex items-center gap-3 rounded-full bg-accent px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-accent-foreground transition-all hover:brightness-110"
             >
               Enviar mensagem
               <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -114,7 +114,7 @@ function ContactosPage() {
               <li>
                 <a
                   href="mailto:libelula.t@gmail.com"
-                  className="group inline-flex items-center gap-3 hover:text-accent"
+                  className="group inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2.5 transition-colors hover:border-accent/60 hover:text-accent"
                 >
                   <Mail className="h-4 w-4 text-muted-foreground group-hover:text-accent" />
                   <span className="font-display text-lg italic">libelula.t@gmail.com</span>
@@ -125,7 +125,7 @@ function ContactosPage() {
                   href="https://instagram.com/libelula.teatro"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 hover:text-accent"
+                  className="group inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2.5 transition-colors hover:border-accent/60 hover:text-accent"
                 >
                   <Instagram className="h-4 w-4 text-muted-foreground group-hover:text-accent" />
                   <span>@libelula.teatro</span>
@@ -136,7 +136,7 @@ function ContactosPage() {
                   href="https://www.facebook.com/libelulateatro.t"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 hover:text-accent"
+                  className="group inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2.5 transition-colors hover:border-accent/60 hover:text-accent"
                 >
                   <Facebook className="h-4 w-4 text-muted-foreground group-hover:text-accent" />
                   <span>Facebook</span>
