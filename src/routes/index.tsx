@@ -324,7 +324,7 @@ function HeroSection({
   }, [images.length]);
 
   return (
-    <section className="relative isolate overflow-hidden bg-foreground text-background">
+    <section className="relative isolate overflow-hidden bg-background">
       {/* Slideshow layer — always rendered to keep SSR/CSR structure identical */}
       <div className="absolute inset-0 -z-20">
         {images.map((src, i) => (
@@ -339,40 +339,45 @@ function HeroSection({
           />
         ))}
         {!hasImages && (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1614] via-foreground to-[#2b1618]" />
+          <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_10%,color-mix(in_oklab,var(--color-accent)_16%,transparent),transparent_60%)] bg-background" />
         )}
       </div>
-      {/* Legibility overlay */}
+      {/* Cinematic legibility overlays */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/50 to-black/80 sm:bg-gradient-to-r sm:from-black/85 sm:via-black/55 sm:to-black/30"
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/65 to-background sm:bg-gradient-to-r sm:from-background sm:via-background/70 sm:to-background/25"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-background to-transparent"
       />
 
       <div className="mx-auto grid min-h-[86vh] max-w-6xl grid-cols-1 items-end gap-12 px-5 pb-20 pt-32 sm:px-8 sm:pt-40 lg:grid-cols-12 lg:items-end lg:gap-16 lg:pb-24">
-        <div className="lg:col-span-8 animate-fade-up">
-          <div className="flex items-center gap-4">
-            <span className="font-display text-lg italic text-background/60">01</span>
-            <span className="h-px w-8 bg-background/40" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-background/80">Temporada 2026</span>
+        <div className="lg:col-span-8">
+          <div className="animate-fade-in-soft flex items-center gap-4">
+            <span className="font-display text-lg italic text-muted-foreground">01</span>
+            <span className="h-px w-8 bg-accent/60" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-accent">Temporada 2026</span>
           </div>
-          <h1 className="mt-8 font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl md:text-[6.5rem]">
+          <h1 className="animate-fade-in-soft animate-delay-200 mt-8 font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl md:text-[6.5rem]">
             {title}
           </h1>
-          <p className="mt-8 max-w-xl text-base leading-relaxed text-background/85 sm:text-lg">
+          <p className="animate-fade-in-soft animate-delay-300 mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {subtitle}
           </p>
         </div>
-        <div className="flex flex-col gap-6 lg:col-span-4 lg:items-end">
+        <div className="animate-fade-in-soft animate-delay-500 flex flex-col gap-5 lg:col-span-4 lg:items-end">
           <Link
             to="/bilhetes"
-            className="group inline-flex items-center gap-3 bg-accent px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-foreground transition-colors hover:bg-background hover:text-foreground"
+            className="group inline-flex items-center justify-center gap-3 rounded-full bg-accent px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-accent-foreground transition-all hover:brightness-110"
+            style={{ boxShadow: "var(--shadow-glow)" }}
           >
             Ver bilhetes
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
           <Link
             to="/pecas"
-            className="inline-flex items-center gap-2 border-b border-background/40 pb-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-background/80 transition-colors hover:border-background hover:text-background"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-8 py-4 text-[11px] font-semibold uppercase tracking-[0.25em] text-foreground/80 transition-colors hover:border-accent/60 hover:text-accent"
           >
             Todas as peças
           </Link>
@@ -387,7 +392,7 @@ function HeroSection({
               type="button"
               aria-label={`Imagem ${i + 1}`}
               onClick={() => setIdx(i)}
-              className={`h-[2px] transition-all ${i === idx ? "w-10 bg-background" : "w-5 bg-background/40 hover:bg-background/70"}`}
+              className={`h-[2px] transition-all ${i === idx ? "w-10 bg-accent" : "w-5 bg-foreground/30 hover:bg-foreground/60"}`}
             />
           ))}
         </div>
