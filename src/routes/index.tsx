@@ -345,11 +345,11 @@ function HeroSection({
       {/* Cinematic legibility overlays */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/65 to-background sm:bg-gradient-to-r sm:from-background sm:via-background/70 sm:to-background/25"
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-background/75 via-background/45 to-background sm:bg-gradient-to-r sm:from-background/95 sm:via-background/55 sm:to-background/10"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-background to-transparent"
+        className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-background to-transparent"
       />
 
       <div className="mx-auto grid min-h-[86vh] max-w-6xl grid-cols-1 items-end gap-12 px-5 pb-20 pt-32 sm:px-8 sm:pt-40 lg:grid-cols-12 lg:items-end lg:gap-16 lg:pb-24">
