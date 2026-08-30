@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Facebook, Instagram, Mail, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { listHomepageData, type Apresentacao, type Peca } from "@/lib/public-data.functions";
 
