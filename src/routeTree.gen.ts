@@ -9,8 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermosECondicoesRouteImport } from './routes/termos-e-condicoes'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
+import { Route as PoliticaDeCookiesRouteImport } from './routes/politica-de-cookies'
 import { Route as PecasRouteImport } from './routes/pecas'
 import { Route as ContactosRouteImport } from './routes/contactos'
 import { Route as BilhetesRouteImport } from './routes/bilhetes'
@@ -19,6 +22,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PecasIndexRouteImport } from './routes/pecas.index'
 import { Route as PecasSlugRouteImport } from './routes/pecas.$slug'
 
+const TermosECondicoesRoute = TermosECondicoesRouteImport.update({
+  id: '/termos-e-condicoes',
+  path: '/termos-e-condicoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
@@ -27,6 +35,16 @@ const SobreRoute = SobreRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
+  id: '/politica-de-privacidade',
+  path: '/politica-de-privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDeCookiesRoute = PoliticaDeCookiesRouteImport.update({
+  id: '/politica-de-cookies',
+  path: '/politica-de-cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PecasRoute = PecasRouteImport.update({
@@ -71,8 +89,11 @@ export interface FileRoutesByFullPath {
   '/bilhetes': typeof BilhetesRoute
   '/contactos': typeof ContactosRoute
   '/pecas': typeof PecasRouteWithChildren
+  '/politica-de-cookies': typeof PoliticaDeCookiesRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/pecas/$slug': typeof PecasSlugRoute
   '/pecas/': typeof PecasIndexRoute
 }
@@ -81,8 +102,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/bilhetes': typeof BilhetesRoute
   '/contactos': typeof ContactosRoute
+  '/politica-de-cookies': typeof PoliticaDeCookiesRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/pecas/$slug': typeof PecasSlugRoute
   '/pecas': typeof PecasIndexRoute
 }
@@ -93,8 +117,11 @@ export interface FileRoutesById {
   '/bilhetes': typeof BilhetesRoute
   '/contactos': typeof ContactosRoute
   '/pecas': typeof PecasRouteWithChildren
+  '/politica-de-cookies': typeof PoliticaDeCookiesRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sobre': typeof SobreRoute
+  '/termos-e-condicoes': typeof TermosECondicoesRoute
   '/pecas/$slug': typeof PecasSlugRoute
   '/pecas/': typeof PecasIndexRoute
 }
@@ -106,8 +133,11 @@ export interface FileRouteTypes {
     | '/bilhetes'
     | '/contactos'
     | '/pecas'
+    | '/politica-de-cookies'
+    | '/politica-de-privacidade'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos-e-condicoes'
     | '/pecas/$slug'
     | '/pecas/'
   fileRoutesByTo: FileRoutesByTo
@@ -116,8 +146,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/bilhetes'
     | '/contactos'
+    | '/politica-de-cookies'
+    | '/politica-de-privacidade'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos-e-condicoes'
     | '/pecas/$slug'
     | '/pecas'
   id:
@@ -127,8 +160,11 @@ export interface FileRouteTypes {
     | '/bilhetes'
     | '/contactos'
     | '/pecas'
+    | '/politica-de-cookies'
+    | '/politica-de-privacidade'
     | '/sitemap.xml'
     | '/sobre'
+    | '/termos-e-condicoes'
     | '/pecas/$slug'
     | '/pecas/'
   fileRoutesById: FileRoutesById
@@ -139,12 +175,22 @@ export interface RootRouteChildren {
   BilhetesRoute: typeof BilhetesRoute
   ContactosRoute: typeof ContactosRoute
   PecasRoute: typeof PecasRouteWithChildren
+  PoliticaDeCookiesRoute: typeof PoliticaDeCookiesRoute
+  PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SobreRoute: typeof SobreRoute
+  TermosECondicoesRoute: typeof TermosECondicoesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/termos-e-condicoes': {
+      id: '/termos-e-condicoes'
+      path: '/termos-e-condicoes'
+      fullPath: '/termos-e-condicoes'
+      preLoaderRoute: typeof TermosECondicoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
@@ -157,6 +203,20 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-privacidade': {
+      id: '/politica-de-privacidade'
+      path: '/politica-de-privacidade'
+      fullPath: '/politica-de-privacidade'
+      preLoaderRoute: typeof PoliticaDePrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-cookies': {
+      id: '/politica-de-cookies'
+      path: '/politica-de-cookies'
+      fullPath: '/politica-de-cookies'
+      preLoaderRoute: typeof PoliticaDeCookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pecas': {
@@ -229,8 +289,11 @@ const rootRouteChildren: RootRouteChildren = {
   BilhetesRoute: BilhetesRoute,
   ContactosRoute: ContactosRoute,
   PecasRoute: PecasRouteWithChildren,
+  PoliticaDeCookiesRoute: PoliticaDeCookiesRoute,
+  PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SobreRoute: SobreRoute,
+  TermosECondicoesRoute: TermosECondicoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
