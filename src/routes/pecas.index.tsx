@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { PosterPlaceholder } from "./index";
@@ -27,7 +27,10 @@ export const Route = createFileRoute("/pecas/")({
 
 function PecasPage() {
   const fetcher = useServerFn(listPecas);
-  const { data: pecas = [] } = useQuery({ queryKey: ["pecas"], queryFn: () => fetcher() });
+  const { data: pecas = [] } = useSuspenseQuery({
+    queryKey: ["pecas"],
+    queryFn: () => fetcher(),
+  });
 
   return (
     <SiteShell>
