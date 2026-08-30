@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Facebook, Instagram, Mail, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { listHomepageData, type Apresentacao, type Peca } from "@/lib/public-data.functions";
 
@@ -238,47 +238,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* CONTACTO */}
-      <section className="relative overflow-hidden border-t border-accent/40 bg-card/40">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-accent/10 blur-3xl"
-        />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <SectionMarker n="04" label="Contacto" />
-            <h2 className="mt-6 font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-              Fale connosco sobre <span className="italic text-accent">programação, residências e parcerias.</span>
-            </h2>
-            <a
-              href="mailto:libelula.t@gmail.com"
-              className="mt-10 inline-block break-words border-b border-border pb-2 font-display text-2xl italic transition-colors hover:border-accent hover:text-accent sm:text-4xl"
-            >
-              libelula.t@gmail.com
-            </a>
-          </div>
-          <div className="lg:col-span-4 lg:col-start-9">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">Redes</p>
-            <ul className="mt-6 space-y-3 text-sm">
-              <li>
-                <a href="https://instagram.com/libelula.teatro" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2 transition-colors hover:border-accent/60 hover:text-accent">
-                  <Instagram className="h-4 w-4 shrink-0" /> @libelula.teatro
-                </a>
-              </li>
-              <li>
-                <a href="https://www.facebook.com/libelulateatro.t" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2 transition-colors hover:border-accent/60 hover:text-accent">
-                  <Facebook className="h-4 w-4 shrink-0" /> Facebook
-                </a>
-              </li>
-              <li>
-                <a href="mailto:libelula.t@gmail.com" className="inline-flex items-center gap-3 rounded-full border border-border bg-secondary/40 px-4 py-2 transition-colors hover:border-accent/60 hover:text-accent">
-                  <Mail className="h-4 w-4 shrink-0" /> Email direto
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
     </SiteShell>
   );
 }
