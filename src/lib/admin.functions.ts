@@ -30,16 +30,30 @@ async function requireUnlocked() {
 
 // --- Auth ---
 
-export const getAdminStatus = createServerFn({ method: "GET" }).handler(async () => {
+type AdminCredentials = { password_hash: string | null; password_salt: string | null };
+
+async function credentialsTable() {
   const sb = await adminClient();
+  // admin_credentials has no anon/authenticated grants; only the privileged
+  // server-side client can read or write it.
+  return (sb as unknown as {
+    from: (t: string) => {
+      select: (c: string) => {
+        eq: (c: string, v: number) => { maybeSingle: () => Promise<{ data: AdminCredentials | null }> };
+      };
+      update: (p: Record<string, unknown>) => {
+        eq: (c: string, v: number) => Promise<{ error: { message: string } | null }>;
+      };
+    };
+  }).from("admin_credentials");
+}
+
+export const getAdminStatus = createServerFn({ method: "GET" }).handler(async () => {
   const session = await useSession<GateSession>(sessionConfig());
-  const { data } = await sb
-    .from("site_settings")
-    .select("admin_password_hash")
-    .eq("id", 1)
-    .maybeSingle();
+  const table = await credentialsTable();
+  const { data } = await table.select("password_hash").eq("id", 1).maybeSingle();
   return {
-    hasPassword: !!data?.admin_password_hash,
+    hasPassword: !!data?.password_hash,
     unlocked: !!session.data.unlocked,
   };
 });
@@ -49,20 +63,15 @@ export const setupAdminPassword = createServerFn({ method: "POST" })
     z.object({ password: z.string().min(6).max(200) }).parse(d),
   )
   .handler(async ({ data }) => {
-    const sb = await adminClient();
-    const { data: existing } = await sb
-      .from("site_settings")
-      .select("admin_password_hash")
-      .eq("id", 1)
-      .maybeSingle();
-    if (existing?.admin_password_hash) {
+    const table = await credentialsTable();
+    const { data: existing } = await table.select("password_hash").eq("id", 1).maybeSingle();
+    if (existing?.password_hash) {
       return { ok: false as const, error: "Já existe uma palavra-passe definida." };
     }
     const salt = randomBytes(16).toString("hex");
     const hash = hashPassword(data.password, salt);
-    const { error } = await sb
-      .from("site_settings")
-      .update({ admin_password_hash: hash, admin_password_salt: salt, updated_at: new Date().toISOString() })
+    const { error } = await table
+      .update({ password_hash: hash, password_salt: salt, updated_at: new Date().toISOString() })
       .eq("id", 1);
     if (error) return { ok: false as const, error: error.message };
     const session = await useSession<GateSession>(sessionConfig());
@@ -70,20 +79,20 @@ export const setupAdminPassword = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+
 export const adminLogin = createServerFn({ method: "POST" })
   .inputValidator((d: { password: string }) => z.object({ password: z.string().min(1) }).parse(d))
   .handler(async ({ data }) => {
-    const sb = await adminClient();
-    const { data: row } = await sb
-      .from("site_settings")
-      .select("admin_password_hash,admin_password_salt")
+    const table = await credentialsTable();
+    const { data: row } = await table
+      .select("password_hash,password_salt")
       .eq("id", 1)
       .maybeSingle();
-    if (!row?.admin_password_hash || !row?.admin_password_salt) {
+    if (!row?.password_hash || !row?.password_salt) {
       return { ok: false as const, error: "Palavra-passe ainda não foi definida." };
     }
-    const candidate = Buffer.from(hashPassword(data.password, row.admin_password_salt), "hex");
-    const stored = Buffer.from(row.admin_password_hash, "hex");
+    const candidate = Buffer.from(hashPassword(data.password, row.password_salt), "hex");
+    const stored = Buffer.from(row.password_hash, "hex");
     const match = candidate.length === stored.length && timingSafeEqual(candidate, stored);
     if (!match) return { ok: false as const, error: "Palavra-passe incorreta." };
     const session = await useSession<GateSession>(sessionConfig());

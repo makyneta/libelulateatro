@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_credentials: {
+        Row: {
+          id: number
+          password_hash: string | null
+          password_salt: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          password_hash?: string | null
+          password_salt?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          password_hash?: string | null
+          password_salt?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       apresentacoes: {
         Row: {
           created_at: string
@@ -99,8 +120,6 @@ export type Database = {
       }
       site_settings: {
         Row: {
-          admin_password_hash: string | null
-          admin_password_salt: string | null
           diretores: Json
           hero_images: Json
           hero_subtitle: string | null
@@ -113,8 +132,6 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          admin_password_hash?: string | null
-          admin_password_salt?: string | null
           diretores?: Json
           hero_images?: Json
           hero_subtitle?: string | null
@@ -127,8 +144,6 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          admin_password_hash?: string | null
-          admin_password_salt?: string | null
           diretores?: Json
           hero_images?: Json
           hero_subtitle?: string | null
