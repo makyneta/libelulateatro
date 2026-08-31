@@ -16,7 +16,9 @@ export const Route = createFileRoute("/pecas/")({
       },
       { property: "og:title", content: "Peças — Libélula Teatro" },
       { property: "og:description", content: "Repertório completo da companhia." },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/pecas" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/pecas" }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData({ queryKey: ["pecas"], queryFn: () => listPecas() }),

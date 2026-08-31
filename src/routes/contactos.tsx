@@ -14,7 +14,9 @@ export const Route = createFileRoute("/contactos")({
       },
       { property: "og:title", content: "Contactos — Libélula Teatro" },
       { property: "og:description", content: "Leiria, Portugal." },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/contactos" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/contactos" }],
   }),
   component: ContactosPage,
 });

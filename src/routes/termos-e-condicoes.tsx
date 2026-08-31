@@ -17,7 +17,9 @@ export const Route = createFileRoute("/termos-e-condicoes")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/termos-e-condicoes" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/termos-e-condicoes" }],
   }),
   component: () => (
     <LegalPage numero="07" etiqueta="Legal" titulo="Termos e" destaque="condições.">

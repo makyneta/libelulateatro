@@ -17,7 +17,9 @@ export const Route = createFileRoute("/politica-de-cookies")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/politica-de-cookies" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/politica-de-cookies" }],
   }),
   component: () => (
     <LegalPage numero="06" etiqueta="Legal" titulo="Política de" destaque="cookies.">

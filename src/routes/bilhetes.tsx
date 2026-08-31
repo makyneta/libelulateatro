@@ -16,7 +16,9 @@ export const Route = createFileRoute("/bilhetes")({
       },
       { property: "og:title", content: "Bilhetes — Libélula Teatro" },
       { property: "og:description", content: "Próximas apresentações e espectáculos passados." },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/bilhetes" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/bilhetes" }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData({
