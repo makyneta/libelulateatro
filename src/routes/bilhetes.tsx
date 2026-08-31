@@ -9,14 +9,17 @@ import { listAllApresentacoes } from "@/lib/public-data.functions";
 export const Route = createFileRoute("/bilhetes")({
   head: () => ({
     meta: [
-      { title: "Bilhetes — Libélula Teatro" },
+      { title: "Agenda Cultural Leiria — Bilhetes & Datas — Libélula Teatro" },
       {
         name: "description",
-        content: "Próximas apresentações e histórico de espectáculos da Libélula Teatro.",
+        content:
+          "Agenda cultural em Leiria: próximas apresentações, datas em digressão e bilhetes da Libélula Teatro.",
       },
       { property: "og:title", content: "Bilhetes — Libélula Teatro" },
       { property: "og:description", content: "Próximas apresentações e espectáculos passados." },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/bilhetes" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/bilhetes" }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData({
@@ -59,7 +62,7 @@ function BilhetesPage() {
           </div>
           <div className="lg:col-span-8">
             <h1 className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
-              Bilhetes <span className="italic">& datas</span>
+              Agenda cultural em Leiria — <span className="italic">bilhetes &amp; datas</span>
             </h1>
             <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
               Próximas apresentações em digressão. Para datas esgotadas, fica o registo de que

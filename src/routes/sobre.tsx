@@ -18,7 +18,9 @@ export const Route = createFileRoute("/sobre")({
         property: "og:description",
         content: "A companhia, a sua missão e os seus diretores artísticos.",
       },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/sobre" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/sobre" }],
   }),
   loader: ({ context }) =>
     context.queryClient.ensureQueryData({

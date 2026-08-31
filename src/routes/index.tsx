@@ -6,18 +6,57 @@ import { CookieBanner } from "@/components/cookie-banner";
 import { listHomepageData, type Apresentacao, type Peca } from "@/lib/public-data.functions";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Libélula Teatro — Companhia de teatro · Leiria" },
-      {
-        name: "description",
-        content:
-          "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
-      },
-      { property: "og:title", content: "Libélula Teatro" },
-      { property: "og:description", content: "Teatro, território e comunidade." },
-    ],
-  }),
+  head: (ctx) => {
+    const ld = ctx.loaderData as
+      | {
+          proximas?: Apresentacao[];
+          pecasMap?: Record<string, Peca>;
+        }
+      | undefined;
+    const eventos = (ld?.proximas ?? []).slice(0, 12).map((a) => {
+      const peca = ld?.pecasMap?.[a.peca_id];
+      return {
+        "@context": "https://schema.org",
+        "@type": "TheaterEvent",
+        name: peca?.nome ?? "Espectáculo",
+        startDate: a.hora ? `${a.data}T${a.hora}` : a.data,
+        url: peca ? `https://libelulateatro.lovable.app/pecas/${peca.slug}` : undefined,
+        eventStatus: "https://schema.org/EventScheduled",
+        location: {
+          "@type": "Place",
+          name: a.local ?? "Leiria",
+          address: { "@type": "PostalAddress", addressLocality: a.local ?? "Leiria", addressCountry: "PT" },
+        },
+        performer: { "@type": "PerformingGroup", name: "Libélula Teatro" },
+        organizer: { "@type": "Organization", name: "Libélula Teatro" },
+        ...(a.link_bilhetes
+          ? { offers: { "@type": "Offer", url: a.link_bilhetes, availability: "https://schema.org/InStock" } }
+          : {}),
+      };
+    });
+    return {
+      meta: [
+        { title: "Libélula Teatro — Companhia de teatro · Leiria" },
+        {
+          name: "description",
+          content:
+            "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
+        },
+        { property: "og:title", content: "Libélula Teatro — Companhia de teatro · Leiria" },
+        {
+          property: "og:description",
+          content:
+            "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
+        },
+        { property: "og:url", content: "https://libelulateatro.lovable.app/" },
+      ],
+      links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/" }],
+      scripts: eventos.map((e) => ({
+        type: "application/ld+json",
+        children: JSON.stringify(e),
+      })),
+    };
+  },
   loader: () => listHomepageData(),
   component: HomePage,
   errorComponent: ErrorComp,
@@ -323,6 +362,7 @@ function HeroSection({
           </div>
           <h1 className="animate-fade-in-soft animate-delay-200 mt-8 font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl md:text-[6.5rem]">
             {title}
+            <span className="sr-only"> — Companhia de teatro em Leiria</span>
           </h1>
           <p className="animate-fade-in-soft animate-delay-300 mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {subtitle}

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { listPecas } from "@/lib/public-data.functions";
 
-const BASE_URL = "";
+const BASE_URL = "https://libelulateatro.lovable.app";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -13,7 +13,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/pecas", changefreq: "weekly", priority: "0.8" },
           { path: "/bilhetes", changefreq: "daily", priority: "0.9" },
+          { path: "/sobre", changefreq: "monthly", priority: "0.6" },
           { path: "/contactos", changefreq: "monthly", priority: "0.5" },
+          { path: "/politica-de-privacidade", changefreq: "yearly", priority: "0.2" },
+          { path: "/politica-de-cookies", changefreq: "yearly", priority: "0.2" },
+          { path: "/termos-e-condicoes", changefreq: "yearly", priority: "0.2" },
           ...pecas.map((p) => ({
             path: `/pecas/${p.slug}`,
             changefreq: "monthly",

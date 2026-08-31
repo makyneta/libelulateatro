@@ -10,19 +10,76 @@ import { getPecaBySlug } from "@/lib/public-data.functions";
 export const Route = createFileRoute("/pecas/$slug")({
   head: (ctx) => {
     const ld = ctx.loaderData as
-      | { peca?: { nome?: string; descricao_breve?: string | null; imagem_url?: string | null } }
+      | {
+          peca?: {
+            nome?: string;
+            slug?: string;
+            descricao_breve?: string | null;
+            imagem_url?: string | null;
+          };
+          apresentacoes?: Array<{
+            data: string;
+            hora: string | null;
+            local: string | null;
+            link_bilhetes: string | null;
+            forcar_sold_out?: boolean;
+          }>;
+        }
       | undefined;
     const nome = ld?.peca?.nome ?? "Peça";
     const desc = ld?.peca?.descricao_breve ?? "Peça da companhia Libélula Teatro.";
     const img = ld?.peca?.imagem_url ?? undefined;
+    const url = `https://libelulateatro.lovable.app/pecas/${ctx.params.slug}`;
+    const eventos = (ld?.apresentacoes ?? [])
+      .filter((a) => a.data >= new Date().toISOString().slice(0, 10))
+      .slice(0, 12)
+      .map((a) => ({
+        "@context": "https://schema.org",
+        "@type": "TheaterEvent",
+        name: nome,
+        description: desc,
+        url,
+        startDate: a.hora ? `${a.data}T${a.hora}` : a.data,
+        eventStatus: "https://schema.org/EventScheduled",
+        location: {
+          "@type": "Place",
+          name: a.local ?? "Leiria",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: a.local ?? "Leiria",
+            addressCountry: "PT",
+          },
+        },
+        performer: { "@type": "PerformingGroup", name: "Libélula Teatro" },
+        organizer: { "@type": "Organization", name: "Libélula Teatro" },
+        ...(img ? { image: img } : {}),
+        ...(a.link_bilhetes
+          ? {
+              offers: {
+                "@type": "Offer",
+                url: a.link_bilhetes,
+                availability: a.forcar_sold_out
+                  ? "https://schema.org/SoldOut"
+                  : "https://schema.org/InStock",
+              },
+            }
+          : {}),
+      }));
     return {
       meta: [
         { title: `${nome} — Libélula Teatro` },
         { name: "description", content: desc },
         { property: "og:title", content: `${nome} — Libélula Teatro` },
         { property: "og:description", content: desc },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
         ...(img ? [{ property: "og:image" as const, content: img }] : []),
       ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: eventos.map((e) => ({
+        type: "application/ld+json",
+        children: JSON.stringify(e),
+      })),
     };
   },
   loader: async ({ params, context }) => {

@@ -14,7 +14,9 @@ export const Route = createFileRoute("/contactos")({
       },
       { property: "og:title", content: "Contactos — Libélula Teatro" },
       { property: "og:description", content: "Leiria, Portugal." },
+      { property: "og:url", content: "https://libelulateatro.lovable.app/contactos" },
     ],
+    links: [{ rel: "canonical", href: "https://libelulateatro.lovable.app/contactos" }],
   }),
   component: ContactosPage,
 });
@@ -82,9 +84,9 @@ function ContactosPage() {
       <section className="border-t border-border/60">
         <div className="mx-auto grid max-w-6xl gap-16 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-12">
           <form onSubmit={onSubmit} className="space-y-6 rounded-2xl border border-border bg-card/50 p-6 sm:p-8 lg:col-span-7" noValidate>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
+            <h2 className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
               Formulário
-            </p>
+            </h2>
             <div className="h-px w-12 bg-accent" />
             <div className="space-y-5 pt-2">
               <Field label="Nome" name="nome" error={errors.nome} />
@@ -106,9 +108,9 @@ function ContactosPage() {
           </form>
 
           <aside className="lg:col-span-4 lg:col-start-9">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
-              Direto
-            </p>
+            <h2 className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
+              Contactos diretos
+            </h2>
             <div className="mt-4 h-px w-12 bg-accent" />
             <ul className="mt-8 space-y-5 text-base">
               <li>

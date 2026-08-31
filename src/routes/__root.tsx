@@ -81,22 +81,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Libélula Teatro é uma companhia portuguesa sediada na Marinha Grande. Espectáculos, peças em digressão e bilhetes.",
+          "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
       },
       { name: "author", content: "Libélula Teatro" },
+      { property: "og:site_name", content: "Libélula Teatro" },
+      { property: "og:locale", content: "pt_PT" },
       { property: "og:title", content: "Libélula Teatro — Companhia de teatro · Leiria" },
       {
         property: "og:description",
-        content: "Companhia de teatro · Marinha Grande, Portugal.",
+        content:
+          "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Libélula Teatro — Companhia de teatro · Leiria" },
-      { name: "description", content: "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes." },
-      { property: "og:description", content: "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes." },
-      { name: "twitter:description", content: "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5cf3b170-cb55-4035-87f5-b885f4aab533/id-preview-061115fa--72e57df7-eca0-4ef1-8b66-47bc2a0078f6.lovable.app-1782334124636.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5cf3b170-cb55-4035-87f5-b885f4aab533/id-preview-061115fa--72e57df7-eca0-4ef1-8b66-47bc2a0078f6.lovable.app-1782334124636.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
+      },
     ],
     links: [
       {
@@ -104,6 +107,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "PerformingGroup",
+          name: "Libélula Teatro",
+          url: "https://libelulateatro.lovable.app/",
+          logo: "https://libelulateatro.lovable.app/favicon.svg",
+          email: "libelula.t@gmail.com",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Leiria",
+            addressCountry: "PT",
+          },
+          sameAs: [
+            "https://instagram.com/libelula.teatro",
+            "https://www.facebook.com/libelulateatro.t",
+          ],
+        }),
+      },
     ],
     htmlAttrs: { lang: "pt-PT" },
   }),
