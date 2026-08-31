@@ -83,17 +83,16 @@ export const setupAdminPassword = createServerFn({ method: "POST" })
 export const adminLogin = createServerFn({ method: "POST" })
   .inputValidator((d: { password: string }) => z.object({ password: z.string().min(1) }).parse(d))
   .handler(async ({ data }) => {
-    const sb = await adminClient();
-    const { data: row } = await sb
-      .from("site_settings")
-      .select("admin_password_hash,admin_password_salt")
+    const table = await credentialsTable();
+    const { data: row } = await table
+      .select("password_hash,password_salt")
       .eq("id", 1)
       .maybeSingle();
-    if (!row?.admin_password_hash || !row?.admin_password_salt) {
+    if (!row?.password_hash || !row?.password_salt) {
       return { ok: false as const, error: "Palavra-passe ainda não foi definida." };
     }
-    const candidate = Buffer.from(hashPassword(data.password, row.admin_password_salt), "hex");
-    const stored = Buffer.from(row.admin_password_hash, "hex");
+    const candidate = Buffer.from(hashPassword(data.password, row.password_salt), "hex");
+    const stored = Buffer.from(row.password_hash, "hex");
     const match = candidate.length === stored.length && timingSafeEqual(candidate, stored);
     if (!match) return { ok: false as const, error: "Palavra-passe incorreta." };
     const session = await useSession<GateSession>(sessionConfig());
