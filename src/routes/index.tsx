@@ -325,6 +325,7 @@ function HeroSection({
           </div>
           <h1 className="animate-fade-in-soft animate-delay-200 mt-8 font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl md:text-[6.5rem]">
             {title}
+            <span className="sr-only"> — Companhia de teatro em Leiria</span>
           </h1>
           <p className="animate-fade-in-soft animate-delay-300 mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {subtitle}
