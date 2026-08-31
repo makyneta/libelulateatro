@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { CookieBanner } from "@/components/cookie-banner";
 import { listHomepageData, type Apresentacao, type Peca } from "@/lib/public-data.functions";
 
 export const Route = createFileRoute("/")({
@@ -238,7 +239,9 @@ function HomePage() {
         </div>
       </section>
 
+      <CookieBanner />
     </SiteShell>
+
   );
 }
 
