@@ -93,15 +93,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Libélula Teatro — Companhia de teatro · Leiria" },
       {
         name: "twitter:description",
         content:
           "Companhia de teatro portuguesa sediada em Leiria. Próximas apresentações, peças em digressão e bilhetes.",
       },
-      { property: "og:image", content: "https://libelulateatro.lovable.app/favicon.svg" },
-      { name: "twitter:image", content: "https://libelulateatro.lovable.app/favicon.svg" },
     ],
     links: [
       {
