@@ -99,7 +99,7 @@ export const listPecas = createServerFn({ method: "GET" }).handler(async (): Pro
     .order("ordem", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return (data ?? []) as Peca[];
+  return (data ?? []).map(normalizePeca);
 });
 
 export const getPecaBySlug = createServerFn({ method: "GET" })
@@ -115,9 +115,9 @@ export const getPecaBySlug = createServerFn({ method: "GET" })
     const { data: apres } = await sb
       .from("apresentacoes")
       .select(APRES_COLS)
-      .eq("peca_id", (peca as Peca).id)
+      .eq("peca_id", normalizePeca(peca).id)
       .order("data", { ascending: true });
-    return { peca: peca as Peca, apresentacoes: (apres ?? []) as Apresentacao[] };
+    return { peca: normalizePeca(peca), apresentacoes: (apres ?? []) as Apresentacao[] };
   });
 
 export const listAllApresentacoes = createServerFn({ method: "GET" }).handler(
@@ -129,7 +129,7 @@ export const listAllApresentacoes = createServerFn({ method: "GET" }).handler(
     ]);
     return {
       apresentacoes: (apres ?? []) as Apresentacao[],
-      pecas: (pecas ?? []) as Peca[],
+      pecas: (pecas ?? []).map(normalizePeca),
     };
   },
 );
