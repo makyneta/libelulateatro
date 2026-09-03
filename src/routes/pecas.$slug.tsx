@@ -196,6 +196,38 @@ function PecaPage() {
         </div>
       </section>
 
+      {peca.galeria.length > 0 && (
+        <section className="border-t border-border/60">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+            <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border/60 pb-6">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-muted-foreground">
+                  Galeria
+                </p>
+                <h2 className="mt-3 font-display text-3xl italic tracking-tight sm:text-4xl">
+                  Fotografias do espectáculo
+                </h2>
+              </div>
+            </div>
+            <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3">
+              {peca.galeria.map((url, i) => (
+                <div
+                  key={url + i}
+                  className="break-inside-avoid mb-4 overflow-hidden rounded-lg border border-border bg-muted"
+                >
+                  <img
+                    src={url}
+                    alt={`Fotografia ${i + 1} da peça ${peca.nome}`}
+                    loading="lazy"
+                    className="h-auto w-full"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="border-t border-border/60">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
           <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border/60 pb-6">
