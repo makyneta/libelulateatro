@@ -263,7 +263,7 @@ const pecaSchema = z.object({
   ordem: z.number().int().optional(),
 });
 
-export const listPecasAdmin = createServerFn({ method: "GET" }).handler(async () => {
+export const listPecasAdmin = createServerFn({ method: "GET" }).handler(async (): Promise<Peca[]> => {
   await requireUnlocked();
   const sb = await adminClient();
   const { data, error } = await sb
@@ -272,7 +272,7 @@ export const listPecasAdmin = createServerFn({ method: "GET" }).handler(async ()
     .order("ordem", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return data ?? [];
+  return (data ?? []).map((p) => ({ ...(p as Peca), galeria: normalizeGaleria(p) }));
 });
 
 export const upsertPeca = createServerFn({ method: "POST" })
