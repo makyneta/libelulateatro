@@ -17,6 +17,7 @@ export type Peca = {
   descricao_completa: string | null;
   imagem_url: string | null;
   ficha_tecnica: string | null;
+  galeria: string[];
   ordem: number;
 };
 
@@ -48,8 +49,26 @@ export type Diretor = {
 };
 
 const PECAS_COLS =
-  "id,nome,slug,ano,descricao_breve,descricao_completa,imagem_url,ficha_tecnica,ordem";
+  "id,nome,slug,ano,descricao_breve,descricao_completa,imagem_url,ficha_tecnica,galeria,ordem";
 const APRES_COLS = "id,peca_id,data,hora,local,link_bilhetes,forcar_sold_out";
+
+function normalizePeca(raw: unknown): Peca {
+  const p = raw as Record<string, unknown>;
+  return {
+    id: String(p.id ?? ""),
+    nome: String(p.nome ?? ""),
+    slug: String(p.slug ?? ""),
+    ano: p.ano != null ? String(p.ano) : null,
+    descricao_breve: p.descricao_breve != null ? String(p.descricao_breve) : null,
+    descricao_completa: p.descricao_completa != null ? String(p.descricao_completa) : null,
+    imagem_url: p.imagem_url != null ? String(p.imagem_url) : null,
+    ficha_tecnica: p.ficha_tecnica != null ? String(p.ficha_tecnica) : null,
+    galeria: Array.isArray(p.galeria)
+      ? p.galeria.filter((x: unknown): x is string => typeof x === "string")
+      : [],
+    ordem: Number(p.ordem ?? 0),
+  };
+}
 
 export const getSiteSettings = createServerFn({ method: "GET" }).handler(
   async (): Promise<SiteSettings> => {
@@ -80,7 +99,7 @@ export const listPecas = createServerFn({ method: "GET" }).handler(async (): Pro
     .order("ordem", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return (data ?? []) as Peca[];
+  return (data ?? []).map(normalizePeca);
 });
 
 export const getPecaBySlug = createServerFn({ method: "GET" })
@@ -96,9 +115,9 @@ export const getPecaBySlug = createServerFn({ method: "GET" })
     const { data: apres } = await sb
       .from("apresentacoes")
       .select(APRES_COLS)
-      .eq("peca_id", (peca as Peca).id)
+      .eq("peca_id", normalizePeca(peca).id)
       .order("data", { ascending: true });
-    return { peca: peca as Peca, apresentacoes: (apres ?? []) as Apresentacao[] };
+    return { peca: normalizePeca(peca), apresentacoes: (apres ?? []) as Apresentacao[] };
   });
 
 export const listAllApresentacoes = createServerFn({ method: "GET" }).handler(
@@ -110,7 +129,7 @@ export const listAllApresentacoes = createServerFn({ method: "GET" }).handler(
     ]);
     return {
       apresentacoes: (apres ?? []) as Apresentacao[],
-      pecas: (pecas ?? []) as Peca[],
+      pecas: (pecas ?? []).map(normalizePeca),
     };
   },
 );
@@ -141,12 +160,12 @@ export const listHomepageData = createServerFn({ method: "GET" }).handler(async 
   let pecasMap: Record<string, Peca> = {};
   if (pecaIds.length) {
     const { data: ps } = await sb.from("pecas").select(PECAS_COLS).in("id", pecaIds);
-    for (const p of (ps ?? []) as Peca[]) pecasMap[p.id] = p;
+    for (const p of ps ?? []) pecasMap[normalizePeca(p).id] = normalizePeca(p);
   }
   return {
     proximas: (proximas ?? []) as Apresentacao[],
     pecasMap,
-    ultimasPecas: (pecas ?? []) as Peca[],
+    ultimasPecas: (pecas ?? []).map(normalizePeca),
     settings: {
       hero_title: settings?.hero_title ?? null,
       hero_subtitle: settings?.hero_subtitle ?? null,

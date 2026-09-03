@@ -2,8 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import type { Peca } from "./public-data.functions";
 
 type GateSession = { unlocked?: boolean };
+
+function normalizeGaleria(raw: unknown): string[] {
+  const p = raw as Record<string, unknown>;
+  return Array.isArray(p.galeria)
+    ? p.galeria.filter((x: unknown): x is string => typeof x === "string")
+    : [];
+}
 
 function sessionConfig() {
   return {
@@ -251,10 +259,11 @@ const pecaSchema = z.object({
   descricao_completa: z.string().trim().max(5000).optional().nullable(),
   imagem_url: z.string().url().optional().nullable().or(z.literal("")),
   ficha_tecnica: z.string().trim().max(2000).optional().nullable(),
+  galeria: z.array(z.string().url()).max(20).optional().nullable(),
   ordem: z.number().int().optional(),
 });
 
-export const listPecasAdmin = createServerFn({ method: "GET" }).handler(async () => {
+export const listPecasAdmin = createServerFn({ method: "GET" }).handler(async (): Promise<Peca[]> => {
   await requireUnlocked();
   const sb = await adminClient();
   const { data, error } = await sb
@@ -263,7 +272,7 @@ export const listPecasAdmin = createServerFn({ method: "GET" }).handler(async ()
     .order("ordem", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return data ?? [];
+  return (data ?? []).map((p) => ({ ...(p as Peca), galeria: normalizeGaleria(p) }));
 });
 
 export const upsertPeca = createServerFn({ method: "POST" })
@@ -288,6 +297,7 @@ export const upsertPeca = createServerFn({ method: "POST" })
       descricao_completa: data.descricao_completa ?? null,
       imagem_url: data.imagem_url ? data.imagem_url : null,
       ficha_tecnica: data.ficha_tecnica ?? null,
+      galeria: data.galeria ?? [],
       ordem: data.ordem ?? 0,
       updated_at: new Date().toISOString(),
     };
