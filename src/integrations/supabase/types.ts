@@ -83,6 +83,7 @@ export type Database = {
           descricao_breve: string | null
           descricao_completa: string | null
           ficha_tecnica: string | null
+          galeria: Json | null
           id: string
           imagem_url: string | null
           nome: string
@@ -96,6 +97,7 @@ export type Database = {
           descricao_breve?: string | null
           descricao_completa?: string | null
           ficha_tecnica?: string | null
+          galeria?: Json | null
           id?: string
           imagem_url?: string | null
           nome: string
@@ -109,6 +111,7 @@ export type Database = {
           descricao_breve?: string | null
           descricao_completa?: string | null
           ficha_tecnica?: string | null
+          galeria?: Json | null
           id?: string
           imagem_url?: string | null
           nome?: string
