@@ -160,12 +160,12 @@ export const listHomepageData = createServerFn({ method: "GET" }).handler(async 
   let pecasMap: Record<string, Peca> = {};
   if (pecaIds.length) {
     const { data: ps } = await sb.from("pecas").select(PECAS_COLS).in("id", pecaIds);
-    for (const p of (ps ?? []) as Peca[]) pecasMap[p.id] = p;
+    for (const p of ps ?? []) pecasMap[normalizePeca(p).id] = normalizePeca(p);
   }
   return {
     proximas: (proximas ?? []) as Apresentacao[],
     pecasMap,
-    ultimasPecas: (pecas ?? []) as Peca[],
+    ultimasPecas: (pecas ?? []).map(normalizePeca),
     settings: {
       hero_title: settings?.hero_title ?? null,
       hero_subtitle: settings?.hero_subtitle ?? null,
