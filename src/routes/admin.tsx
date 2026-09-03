@@ -266,6 +266,7 @@ type PecaForm = {
   descricao_completa?: string | null;
   imagem_url?: string | null;
   ficha_tecnica?: string | null;
+  galeria?: string[];
   ordem?: number;
 };
 
@@ -286,11 +287,23 @@ function PecaEditor({
   const [completa, setCompleta] = useState(initial?.descricao_completa ?? "");
   const [imagem, setImagem] = useState(initial?.imagem_url ?? "");
   const [ficha, setFicha] = useState(initial?.ficha_tecnica ?? "");
+  const [galeria, setGaleria] = useState<string[]>(initial?.galeria ?? []);
   const [ordem, setOrdem] = useState<number>(initial?.ordem ?? 0);
 
   function onNomeChange(v: string) {
     setNome(v);
     if (!slugTouched) setSlug(slugify(v));
+  }
+
+  function moveGaleria(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= galeria.length) return;
+    const next = galeria.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    setGaleria(next);
+  }
+  function removeGaleria(i: number) {
+    setGaleria(galeria.filter((_, idx) => idx !== i));
   }
 
   return (
@@ -307,6 +320,7 @@ function PecaEditor({
             descricao_completa: completa || null,
             imagem_url: imagem || null,
             ficha_tecnica: ficha || null,
+            galeria,
             ordem: Number(ordem) || 0,
           });
         }}
