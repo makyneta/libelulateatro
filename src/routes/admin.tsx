@@ -352,6 +352,62 @@ function PecaEditor({
         <AdminField label="Descrição breve" value={breve ?? ""} onChange={setBreve} multiline rows={3} />
         <AdminField label="Descrição completa" value={completa ?? ""} onChange={setCompleta} multiline rows={6} />
         <AdminField label="Ficha técnica (opcional)" value={ficha ?? ""} onChange={setFicha} multiline rows={4} />
+
+        <div>
+          <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Galeria de fotografias
+          </span>
+          {galeria.length === 0 && (
+            <p className="mb-3 rounded-md border border-dashed border-border bg-secondary/30 px-4 py-6 text-center text-xs text-muted-foreground">
+              Sem fotografias. Carregue uma para começar.
+            </p>
+          )}
+          <ul className="space-y-2">
+            {galeria.map((url, i) => (
+              <li
+                key={url + i}
+                className="flex items-center gap-3 rounded-md border border-border bg-card p-2"
+              >
+                <img src={url} alt="" className="h-14 w-20 rounded object-cover" />
+                <span className="flex-1 truncate text-xs text-muted-foreground">{url}</span>
+                <button
+                  type="button"
+                  onClick={() => moveGaleria(i, -1)}
+                  disabled={i === 0}
+                  className="rounded p-1 text-muted-foreground hover:bg-muted disabled:opacity-30"
+                  aria-label="Mover para cima"
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveGaleria(i, 1)}
+                  disabled={i === galeria.length - 1}
+                  className="rounded p-1 text-muted-foreground hover:bg-muted disabled:opacity-30"
+                  aria-label="Mover para baixo"
+                >
+                  <ArrowDown className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => removeGaleria(i)}
+                  className="rounded p-1 text-destructive hover:bg-destructive/10"
+                  aria-label="Remover"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-3">
+            <UploadButton
+              folder="pecas"
+              label="Adicionar fotografia"
+              onUploaded={(url) => setGaleria((cur) => [...cur, url])}
+            />
+          </div>
+        </div>
+
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" onClick={onCancel} className={btnSecondary}>Cancelar</button>
           <button type="submit" className={btnPrimary}>Guardar</button>
