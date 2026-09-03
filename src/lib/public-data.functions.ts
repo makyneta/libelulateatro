@@ -17,6 +17,7 @@ export type Peca = {
   descricao_completa: string | null;
   imagem_url: string | null;
   ficha_tecnica: string | null;
+  galeria: string[];
   ordem: number;
 };
 
@@ -48,7 +49,7 @@ export type Diretor = {
 };
 
 const PECAS_COLS =
-  "id,nome,slug,ano,descricao_breve,descricao_completa,imagem_url,ficha_tecnica,ordem";
+  "id,nome,slug,ano,descricao_breve,descricao_completa,imagem_url,ficha_tecnica,galeria,ordem";
 const APRES_COLS = "id,peca_id,data,hora,local,link_bilhetes,forcar_sold_out";
 
 export const getSiteSettings = createServerFn({ method: "GET" }).handler(
