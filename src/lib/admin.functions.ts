@@ -289,6 +289,7 @@ export const upsertPeca = createServerFn({ method: "POST" })
       descricao_completa: data.descricao_completa ?? null,
       imagem_url: data.imagem_url ? data.imagem_url : null,
       ficha_tecnica: data.ficha_tecnica ?? null,
+      galeria: data.galeria ?? [],
       ordem: data.ordem ?? 0,
       updated_at: new Date().toISOString(),
     };
