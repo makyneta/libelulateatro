@@ -52,6 +52,24 @@ const PECAS_COLS =
   "id,nome,slug,ano,descricao_breve,descricao_completa,imagem_url,ficha_tecnica,galeria,ordem";
 const APRES_COLS = "id,peca_id,data,hora,local,link_bilhetes,forcar_sold_out";
 
+function normalizePeca(raw: unknown): Peca {
+  const p = raw as Record<string, unknown>;
+  return {
+    id: String(p.id ?? ""),
+    nome: String(p.nome ?? ""),
+    slug: String(p.slug ?? ""),
+    ano: p.ano != null ? String(p.ano) : null,
+    descricao_breve: p.descricao_breve != null ? String(p.descricao_breve) : null,
+    descricao_completa: p.descricao_completa != null ? String(p.descricao_completa) : null,
+    imagem_url: p.imagem_url != null ? String(p.imagem_url) : null,
+    ficha_tecnica: p.ficha_tecnica != null ? String(p.ficha_tecnica) : null,
+    galeria: Array.isArray(p.galeria)
+      ? p.galeria.filter((x: unknown): x is string => typeof x === "string")
+      : [],
+    ordem: Number(p.ordem ?? 0),
+  };
+}
+
 export const getSiteSettings = createServerFn({ method: "GET" }).handler(
   async (): Promise<SiteSettings> => {
     const sb = publicClient();

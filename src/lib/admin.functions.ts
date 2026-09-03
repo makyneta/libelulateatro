@@ -251,6 +251,7 @@ const pecaSchema = z.object({
   descricao_completa: z.string().trim().max(5000).optional().nullable(),
   imagem_url: z.string().url().optional().nullable().or(z.literal("")),
   ficha_tecnica: z.string().trim().max(2000).optional().nullable(),
+  galeria: z.array(z.string().url()).max(20).optional().nullable(),
   ordem: z.number().int().optional(),
 });
 
