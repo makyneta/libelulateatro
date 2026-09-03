@@ -2,8 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import type { Peca } from "./public-data.functions";
 
 type GateSession = { unlocked?: boolean };
+
+function normalizeGaleria(raw: unknown): string[] {
+  const p = raw as Record<string, unknown>;
+  return Array.isArray(p.galeria)
+    ? p.galeria.filter((x: unknown): x is string => typeof x === "string")
+    : [];
+}
 
 function sessionConfig() {
   return {
